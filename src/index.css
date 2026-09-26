@@ -1,0 +1,718 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+ * Site palette: near-black (dark, the default) or white, neutral greys, and Paperlight's one
+ * brand colour, lamp amber, used for the mark, the light beam and small accents only.
+ */
+:root {
+  --bg: #ffffff;
+  --bg-2: #f6f6f8;
+  --card: #ffffff;
+  --card-2: #fafafb;
+  --border: #e7e7eb;
+  --border-2: #d6d6dc;
+  --fg: #111113;
+  --fg-2: #3c3c43;
+  --muted: #62626a;
+  --faint: #95959d;
+  --accent: #b8760f;
+  --lamp: #e09c26;
+  --button: #111113;
+  --on-button: #ffffff;
+  color-scheme: light;
+
+  /* The app's own tokens, so the demo window looks exactly like Paperlight. */
+  --paper: #ffffff;
+  --paper-2: #f6f6f8;
+  --sheet: #ffffff;
+  --hover: #efeff2;
+  --selected: #e8e8ed;
+  --line: #e7e7eb;
+  --line-strong: #d3d3d9;
+  --ink: #18181b;
+  --ink-2: #3c3c43;
+  --graphite: #62626a;
+  --pencil: #95959d;
+  --app-lamp: #e09c26;
+  --lamp-wash: #fcecc8;
+  --on-ink: #ffffff;
+  --pdf: #d03b2f;
+  --word: #2b5fc0;
+  --excel: #1b7a46;
+  --slides: #cf5b26;
+  --ok: #2f9a58;
+  --tag-blue: #2b5fc0;
+  --tag-plum: #8a4f9e;
+  --tag-moss: #1b7a46;
+}
+
+.dark {
+  --bg: #0a0a0b;
+  --bg-2: #0f0f11;
+  --card: #121214;
+  --card-2: #161619;
+  --border: #212125;
+  --border-2: #2e2e34;
+  --fg: #f3f3f5;
+  --fg-2: #c9c9cf;
+  --muted: #8f8f98;
+  --faint: #5f5f67;
+  --accent: #eab04c;
+  --lamp: #eab04c;
+  --button: #f3f3f5;
+  --on-button: #111113;
+  color-scheme: dark;
+
+  --paper: #1b1b1e;
+  --paper-2: #151517;
+  --sheet: #222226;
+  --hover: #29292e;
+  --selected: #313137;
+  --line: #2c2c31;
+  --line-strong: #3b3b42;
+  --ink: #ededf0;
+  --ink-2: #c8c8ce;
+  --graphite: #9c9ca4;
+  --pencil: #6d6d75;
+  --app-lamp: #eab04c;
+  --lamp-wash: #4a3915;
+  --on-ink: #18181b;
+  --pdf: #f07466;
+  --word: #7ea6f2;
+  --excel: #5cc08a;
+  --slides: #f0935f;
+  --ok: #5cc08a;
+  --tag-blue: #7ea6f2;
+  --tag-plum: #c697d8;
+  --tag-moss: #5cc08a;
+}
+
+@theme inline {
+  --font-sans: "Geist Variable", "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif;
+  /* Inside the demo window: Windows' own typeface, like the real app. */
+  --font-app: "Segoe UI Variable Text", "Segoe UI", "Geist Variable", system-ui, sans-serif;
+  --font-mono: "Cascadia Mono", "SF Mono", Consolas, monospace;
+
+  --color-bg: var(--bg);
+  --color-bg-2: var(--bg-2);
+  --color-card: var(--card);
+  --color-card-2: var(--card-2);
+  --color-border: var(--border);
+  --color-border-2: var(--border-2);
+  --color-fg: var(--fg);
+  --color-fg-2: var(--fg-2);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-accent: var(--accent);
+  --color-lamp: var(--lamp);
+  --color-button: var(--button);
+  --color-on-button: var(--on-button);
+
+  --color-paper: var(--paper);
+  --color-paper-2: var(--paper-2);
+  --color-sheet: var(--sheet);
+  --color-hover: var(--hover);
+  --color-selected: var(--selected);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-graphite: var(--graphite);
+  --color-pencil: var(--pencil);
+  --color-app-lamp: var(--app-lamp);
+  --color-lamp-wash: var(--lamp-wash);
+  --color-on-ink: var(--on-ink);
+  --color-pdf: var(--pdf);
+  --color-word: var(--word);
+  --color-excel: var(--excel);
+  --color-slides: var(--slides);
+  --color-ok: var(--ok);
+
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 80px;
+  }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+    overflow-x: clip;
+  }
+
+  ::selection {
+    background: color-mix(in srgb, var(--lamp) 35%, transparent);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--lamp);
+    outline-offset: 2px;
+  }
+
+  kbd {
+    font-family: inherit;
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
+
+/* The lamp switching on: the beam draws down, then breathes very slowly. */
+@keyframes beam-on {
+  from {
+    transform: scaleY(0);
+    opacity: 0;
+  }
+  to {
+    transform: scaleY(1);
+    opacity: var(--beam-power);
+  }
+}
+
+@keyframes breathe {
+  0%,
+  100% {
+    opacity: var(--beam-power);
+  }
+  50% {
+    opacity: calc(var(--beam-power) * 0.85);
+  }
+}
+
+@keyframes flare-on {
+  from {
+    opacity: 0;
+    transform: scaleX(0.3);
+  }
+}
+
+@keyframes haze {
+  to {
+    transform: translate(-50%, -700px);
+  }
+}
+
+@keyframes ticker {
+  0% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  10%,
+  85% {
+    opacity: 1;
+    transform: none;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes caret {
+  50% {
+    opacity: 0;
+  }
+}
+
+@layer components {
+  /* ---------- The lamp ----------
+   * A beam built from soft conic wedges that meet at a point far above the page, so it is
+   * thin at the top and widens as it falls; a faint drifting haze; dust; and, where it lands,
+   * a flare on the window's edge and a rim of light running down its sides.
+   * Colours are RGB triplets so each layer can set its own strength.
+   */
+  :root {
+    --beam-hot: 224 150 40;
+    --beam: 224 156 38;
+    --beam-deep: 214 128 24;
+    --beam-blend: normal;
+    --beam-power: 1;
+  }
+  .dark {
+    --beam-hot: 255 247 232;
+    --beam: 255 206 128;
+    --beam-deep: 238 150 44;
+    --beam-blend: screen;
+    --beam-power: 1;
+  }
+
+  .lamp {
+    position: absolute;
+    left: 50%;
+    bottom: 100%;
+    width: 1800px;
+    height: 1400px;
+    transform: translateX(-50%);
+    pointer-events: none;
+    isolation: isolate;
+  }
+  .lamp-on {
+    position: absolute;
+    inset: 0;
+    opacity: var(--beam-power);
+    transform-origin: top;
+    animation:
+      beam-on 1.6s var(--ease-out-soft) 0.1s both,
+      breathe 8s ease-in-out 1.8s infinite;
+  }
+  .lamp-on > * {
+    position: absolute;
+    mix-blend-mode: var(--beam-blend);
+  }
+
+  /* A wedge: --a is half its angle, --o its strength. */
+  .lamp-wedge {
+    inset: 0;
+    background: conic-gradient(
+      from calc(180deg - var(--a)) at 50% 0%,
+      transparent 0deg,
+      rgb(var(--c) / var(--o)) var(--a),
+      transparent calc(var(--a) * 2)
+    );
+    mask-image: linear-gradient(to bottom, transparent 0%, rgb(0 0 0 / 0.25) 35%, rgb(0 0 0 / 0.7) 75%, #000 100%);
+  }
+  .lamp-wide {
+    --a: 16deg;
+    --o: 0.13;
+    --c: var(--beam-deep);
+    filter: blur(30px);
+  }
+  .lamp-mid {
+    --a: 4.5deg;
+    --o: 0.3;
+    --c: var(--beam);
+    filter: blur(14px);
+  }
+  .lamp-core {
+    --a: 0.9deg;
+    --o: 0.95;
+    --c: var(--beam-hot);
+    filter: blur(3px);
+  }
+  /* The filament: thin, soft, brightest where it lands. */
+  .lamp-hot {
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    transform: translateX(-50%);
+    background: linear-gradient(to bottom, transparent 20%, rgb(var(--beam-hot) / 0.45) 60%, rgb(var(--beam-hot)) 100%);
+    filter: blur(1px);
+  }
+  /* The beam swells just before it hits the surface. */
+  .lamp-base {
+    left: 50%;
+    bottom: -40px;
+    width: 520px;
+    height: 300px;
+    transform: translateX(-50%);
+    background:
+      radial-gradient(ellipse 18% 55% at 50% 100%, rgb(var(--beam-hot) / 0.75), transparent 70%),
+      radial-gradient(ellipse 50% 80% at 50% 100%, rgb(var(--beam) / 0.4), transparent 72%);
+    filter: blur(10px);
+  }
+  /* Haze: stretched noise drifting upwards through the beam. */
+  .lamp-haze {
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 300px;
+    transform: translateX(-50%);
+    overflow: hidden;
+    opacity: 0.4;
+    mask-image: linear-gradient(to right, transparent, #000 38%, #000 62%, transparent);
+  }
+  .lamp-haze-tex {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: 420px;
+    mask-image: linear-gradient(to bottom, transparent 15%, #000 45%);
+    height: 200%;
+    transform: translateX(-50%);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='2800'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.02 0.0036' numOctaves='3' seed='11' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 0.85 0 0 0 0 0.62 1.9 0 0 0 -0.95'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 420px 2800px;
+    background-repeat: no-repeat;
+    animation: haze 70s ease-in-out infinite alternate;
+  }
+  /* Light theme: daylight on white paper. A fine gold thread with a narrow soft glow and a
+     gold rim where it lands; the wide wash, haze and dust would only read as stains. */
+  :where(html:not(.dark)) :is(.lamp-wide, .lamp-mid, .lamp-haze, .lamp-dust) {
+    display: none;
+  }
+  :where(html:not(.dark)) .lamp-core {
+    --o: 0.28;
+    --a: 1.4deg;
+    filter: blur(6px);
+  }
+  :where(html:not(.dark)) .lamp-hot {
+    width: 1.5px;
+    filter: none;
+    background: linear-gradient(to bottom, transparent 10%, rgb(224 156 38 / 0.35) 55%, rgb(214 128 24 / 0.95) 100%);
+  }
+  :where(html:not(.dark)) .lamp-base {
+    width: 360px;
+    height: 160px;
+    background: radial-gradient(ellipse 50% 70% at 50% 100%, rgb(224 156 38 / 0.28), transparent 72%);
+  }
+  :where(html:not(.dark)) .flare-wide {
+    background: radial-gradient(ellipse 50% 50%, rgb(224 156 38 / 0.12), transparent 70%);
+  }
+  :where(html:not(.dark)) .flare-hot {
+    width: 180px;
+    height: 16px;
+    background: radial-gradient(ellipse 50% 50%, rgb(255 214 150 / 0.95), rgb(224 156 38 / 0.35) 45%, transparent 72%);
+  }
+  :where(html:not(.dark)) .rim-glow {
+    filter: blur(26px);
+    opacity: 0.2;
+  }
+  /* On phones the beam crosses the paragraph, so it glows a little less. */
+  @media (max-width: 767px) {
+    .dark {
+      --beam-power: 0.8;
+    }
+    :root:not(.dark) {
+      --beam-power: 0.85;
+    }
+  }
+  .lamp-dust {
+    left: 50%;
+    bottom: 0;
+    width: 760px;
+    height: 820px;
+    transform: translateX(-50%);
+  }
+
+  /* Rim light on the window: the ring, and a blurred copy for the glow outside it. */
+  .rim-line,
+  .rim-glow {
+    position: absolute;
+    pointer-events: none;
+    border-radius: 12px;
+    background: radial-gradient(
+      ellipse 78% 105% at 50% 0%,
+      rgb(var(--beam-hot)) 0%,
+      rgb(var(--beam)) 12%,
+      rgb(var(--beam-deep) / 0.95) 34%,
+      rgb(var(--beam-deep) / 0.55) 60%,
+      rgb(var(--beam-deep) / 0.18) 82%,
+      transparent 100%
+    );
+    animation: fade 1.2s ease-out 1.1s both;
+  }
+  .rim-line {
+    display: none;
+    inset: -1px;
+    z-index: 20;
+    padding: 1.5px;
+    mask:
+      linear-gradient(#000 0 0) content-box exclude,
+      linear-gradient(#000 0 0);
+    opacity: var(--beam-power);
+  }
+  @supports (mask-composite: exclude) or (-webkit-mask-composite: xor) {
+    .rim-line {
+      display: block;
+      -webkit-mask:
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+      mask:
+        linear-gradient(#000 0 0) content-box exclude,
+        linear-gradient(#000 0 0);
+    }
+  }
+  .rim-glow {
+    inset: -6px;
+    filter: blur(22px);
+    opacity: var(--beam-power);
+  }
+
+  /* The flare on the edge where the beam lands. */
+  .flare {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    z-index: 21;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+    opacity: var(--beam-power);
+    animation: flare-on 1.2s var(--ease-out-soft) 1s both;
+  }
+  .flare > span {
+    position: absolute;
+    left: 0;
+    top: 0;
+    transform: translate(-50%, -50%);
+    mix-blend-mode: var(--beam-blend);
+  }
+  .flare-wide {
+    width: 980px;
+    height: 150px;
+    background: radial-gradient(ellipse 50% 50%, rgb(var(--beam) / 0.5), rgb(var(--beam-deep) / 0.16) 45%, transparent 72%);
+    filter: blur(6px);
+  }
+  .flare-streak {
+    width: min(1300px, 100vw);
+    height: 3px;
+    background: linear-gradient(90deg, transparent, rgb(var(--beam-deep) / 0.5) 22%, rgb(var(--beam-hot)) 50%, rgb(var(--beam-deep) / 0.5) 78%, transparent);
+    filter: blur(1.2px);
+  }
+  .flare-hot {
+    width: 300px;
+    height: 34px;
+    background: radial-gradient(ellipse 50% 50%, rgb(var(--beam-hot)), rgb(var(--beam-hot) / 0.5) 35%, transparent 70%);
+    filter: blur(2px);
+  }
+
+  /* Faint grid behind sections, fading out at the edges. */
+  .grid-bg {
+    background-image:
+      linear-gradient(to right, var(--border) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--border) 1px, transparent 1px);
+    background-size: 56px 56px;
+    mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000 20%, transparent 75%);
+  }
+
+  .hl {
+    background: var(--lamp-wash);
+    color: var(--ink);
+    border-radius: 3px;
+    padding: 0 1px;
+  }
+
+  .app-scroll::-webkit-scrollbar {
+    width: 10px;
+  }
+  .app-scroll::-webkit-scrollbar-thumb {
+    background: var(--line-strong);
+    border-radius: 999px;
+    border: 3px solid transparent;
+    background-clip: content-box;
+  }
+}
+
+@layer utilities {
+  .animate-rise {
+    animation: rise 700ms var(--ease-out-soft) both;
+  }
+  .animate-fade {
+    animation: fade 200ms ease-out both;
+  }
+  .animate-ticker {
+    animation: ticker 2.6s var(--ease-out-soft) both;
+  }
+  .animate-caret {
+    animation: caret 1s steps(1) infinite;
+  }
+  .text-balance {
+    text-wrap: balance;
+  }
+  .text-pretty {
+    text-wrap: pretty;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .lamp-on,
+  .lamp-haze-tex,
+  .flare,
+  .rim-line,
+  .rim-glow,
+  .window-rise,
+  .animate-rise,
+  .animate-ticker {
+    animation: none !important;
+  }
+}
+
+/* ---------- Scroll reveals (see src/lib/reveal.ts) ---------- */
+.reveal [data-reveal] {
+  transition:
+    opacity 0.9s var(--ease-out-soft),
+    transform 0.9s var(--ease-out-soft),
+    filter 0.9s var(--ease-out-soft);
+  transition-delay: calc(var(--i, 0) * 90ms);
+}
+.reveal [data-reveal="up"]:not([data-in]) {
+  opacity: 0;
+  transform: translateY(28px);
+  filter: blur(6px);
+}
+.reveal [data-reveal="scale"]:not([data-in]) {
+  opacity: 0;
+  transform: translateY(36px) scale(0.96);
+  filter: blur(8px);
+}
+/* Headings: each line rises out of its own mask. */
+.line-mask {
+  display: block;
+  overflow: hidden;
+  /* Room for descenders inside the mask, without changing the line spacing. */
+  padding-bottom: 0.12em;
+  margin-bottom: -0.12em;
+}
+.line-mask > span {
+  display: block;
+  text-wrap: balance;
+}
+.reveal [data-reveal="lines"] .line-mask > span {
+  transition: transform 1s var(--ease-out-soft);
+  transition-delay: calc(var(--l, 0) * 110ms);
+}
+.reveal [data-reveal="lines"]:not([data-in]) .line-mask > span {
+  transform: translateY(110%);
+}
+@media print {
+  .reveal [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+}
+
+/* The demo window tilts up into place as the lamp switches on. */
+@keyframes window-rise {
+  from {
+    opacity: 0;
+    transform: perspective(1400px) translateY(60px) rotateX(16deg) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.window-rise {
+  transform-origin: 50% 0;
+  animation: window-rise 1.3s var(--ease-out-soft) 0.35s both;
+}
+
+/* Cards: a lamp-like glow follows the pointer, on devices that have one. */
+.spot {
+  position: relative;
+  isolation: isolate;
+}
+.spot::before,
+.spot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+.spot::before {
+  background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 0%), rgb(var(--beam) / 0.09), transparent 45%);
+}
+/* The border lights up under the pointer too. */
+.spot::after {
+  z-index: 2;
+  inset: -1px;
+  padding: 1px;
+  background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 0%), rgb(var(--beam) / 0.6), transparent 60%);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box exclude,
+    linear-gradient(#000 0 0);
+}
+@media (hover: hover) and (pointer: fine) {
+  .spot:hover::before,
+  .spot:hover::after {
+    opacity: 1;
+  }
+}
+@supports not ((mask-composite: exclude) or (-webkit-mask-composite: xor)) {
+  .spot::after {
+    display: none;
+  }
+}
+
+/* Reading progress, where the browser can tie an animation to scrolling. */
+.progress {
+  display: none;
+}
+@supports (animation-timeline: scroll()) {
+  .progress {
+    display: block;
+    transform-origin: 0 50%;
+    animation: progress linear both;
+    animation-timeline: scroll(root);
+  }
+}
+@keyframes progress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* The hero's second line: warm in the dark, plain ink-to-grey on white. */
+.headline-accent {
+  background-image: linear-gradient(to bottom, var(--fg) 30%, #7a7a82);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.dark .headline-accent {
+  background-image: linear-gradient(to bottom, var(--fg) 30%, #cdb48a);
+}
+
+.no-transitions,
+.no-transitions * {
+  transition: none !important;
+}
+
+@keyframes runner {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(400%);
+  }
+}
+
+/* On white, cards need a hint of depth; in the dark the borders are enough. */
+.card-depth {
+  box-shadow:
+    0 1px 2px rgb(16 16 20 / 0.04),
+    0 12px 32px -18px rgb(16 16 20 / 0.14);
+}
+.dark .card-depth {
+  box-shadow: none;
+}
