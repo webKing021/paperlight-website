@@ -2,6 +2,7 @@ import { Code2, Download, Feather, ScanText, WifiOff } from "lucide-react";
 import { Demo } from "../demo/Demo";
 import { REPO_URL, useRepoInfo } from "../lib/github";
 import { DownloadChip } from "./DownloadCount";
+import { WatchFilmLink } from "./Film";
 import { Daylight } from "./Lamp";
 import { GitHubIcon } from "./icons";
 
@@ -71,6 +72,7 @@ export function Hero() {
           >
             <GitHubIcon className="size-4" /> View source
           </a>
+          <WatchFilmLink />
         </div>
         <p className="animate-rise mt-5 flex flex-wrap items-center gap-x-3 gap-y-2 text-[14px] text-muted" style={{ animationDelay: "240ms" }}>
           <DownloadChip />

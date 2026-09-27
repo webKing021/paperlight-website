@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { Features } from "./components/Features";
+import { Film } from "./components/Film";
 import { Hero } from "./components/Hero";
 import { Nav } from "./components/Nav";
 import { NotFound } from "./components/NotFound";
@@ -49,6 +50,7 @@ export default function App() {
       <Nav />
       <main>
         <Hero />
+        <Film />
         <Features />
         <Formats />
         <Privacy />
