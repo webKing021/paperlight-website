@@ -108,3 +108,60 @@ export function Landing() {
     </>
   );
 }
+
+/** One leafy branch, drawn as a shadow: a curved stem with leaves on alternate sides. */
+function Branch({ className, leaves }: { className: string; leaves: number }) {
+  const stem = (t: number) => {
+    // A cubic from the top right corner, drooping down to the left.
+    const [x0, y0, x1, y1, x2, y2, x3, y3] = [620, -20, 520, 90, 420, 170, 230, 400];
+    const u = 1 - t;
+    return [
+      u ** 3 * x0 + 3 * u * u * t * x1 + 3 * u * t * t * x2 + t ** 3 * x3,
+      u ** 3 * y0 + 3 * u * u * t * y1 + 3 * u * t * t * y2 + t ** 3 * y3,
+    ];
+  };
+  const shapes = Array.from({ length: leaves }, (_, i) => {
+    const t = 0.12 + (i / (leaves - 1)) * 0.86;
+    const [x, y] = stem(t);
+    const [nx, ny] = stem(Math.min(1, t + 0.01));
+    const along = (Math.atan2(ny - y, nx - x) * 180) / Math.PI;
+    const side = i % 2 === 0 ? 1 : -1;
+    const length = 86 + ((i * 37) % 50);
+    const width = 26 + ((i * 13) % 12);
+    return { x, y, angle: along + side * (48 + ((i * 17) % 20)), length, width };
+  });
+  return (
+    <svg viewBox="0 0 640 520" className={className}>
+      <path d="M620 -20 C 520 90, 420 170, 230 400" fill="none" stroke="currentColor" strokeWidth="5" strokeLinecap="round" />
+      {shapes.map((s, i) => (
+        <path
+          key={i}
+          transform={`translate(${s.x.toFixed(1)} ${s.y.toFixed(1)}) rotate(${s.angle.toFixed(1)})`}
+          d={`M0 0 Q ${s.length * 0.3} ${-s.width} ${s.length} 0 Q ${s.length * 0.3} ${s.width} 0 0 Z`}
+          fill="currentColor"
+        />
+      ))}
+    </svg>
+  );
+}
+
+/**
+ * Light theme: morning sun through a window, falling across the page. Warm panes of light with
+ * the soft cool shadows of the window bars and a leafy branch swaying outside. Shown instead of
+ * the lamp, which only works against the dark.
+ */
+export function Daylight() {
+  return (
+    <div aria-hidden="true" className="daylight">
+      <div className="daylight-sun">
+        <div className="daylight-window">
+          {Array.from({ length: 6 }, (_, i) => (
+            <span key={i} />
+          ))}
+        </div>
+        <Branch className="daylight-leaves daylight-leaves-near" leaves={11} />
+        <Branch className="daylight-leaves daylight-leaves-far" leaves={8} />
+      </div>
+    </div>
+  );
+}

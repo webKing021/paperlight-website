@@ -2,6 +2,7 @@ import { Code2, Download, Feather, ScanText, WifiOff } from "lucide-react";
 import { Demo } from "../demo/Demo";
 import { REPO_URL, useRepoInfo } from "../lib/github";
 import { DownloadChip } from "./DownloadCount";
+import { Daylight } from "./Lamp";
 import { GitHubIcon } from "./icons";
 
 const FACTS = [
@@ -33,6 +34,7 @@ export function Hero() {
 
   return (
     <section className="relative pt-32 sm:pt-40">
+      <Daylight />
       <div className="relative z-10 mx-auto max-w-[1200px] px-5 sm:px-8">
         <h1 className="animate-rise max-w-[15ch] text-[clamp(2.6rem,9vw,6.75rem)] leading-[0.95] font-semibold tracking-[-0.05em] text-fg">
           Every document.

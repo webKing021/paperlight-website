@@ -359,37 +359,107 @@
     background-repeat: no-repeat;
     animation: haze 70s ease-in-out infinite alternate;
   }
-  /* Light theme: daylight on white paper. A fine gold thread with a narrow soft glow and a
-     gold rim where it lands; the wide wash, haze and dust would only read as stains. */
-  :where(html:not(.dark)) :is(.lamp-wide, .lamp-mid, .lamp-haze, .lamp-dust) {
+  /* Light theme: the lamp only works against the dark, so daylight takes over (.daylight). */
+  html:not(.dark) :is(.lamp, .rim-glow, .rim-line, .flare) {
     display: none;
   }
-  :where(html:not(.dark)) .lamp-core {
-    --o: 0.28;
-    --a: 1.4deg;
+
+  /* ---------- Daylight (light theme) ----------
+   * Morning sun through a tall window: six warm panes, skewed as if cast from the upper right,
+   * soft-edged (penumbra) and warm at the rims; the bars between them and a branch outside
+   * cast cool shadows. Only transforms and opacity animate.
+   */
+  .daylight {
+    position: absolute;
+    inset: 0 0 auto;
+    height: 1250px;
+    overflow: hidden;
+    pointer-events: none;
+    mask-image: linear-gradient(to bottom, #000 60%, transparent);
+  }
+  /* The room: a faint cool shade, so the sunlight has something to be brighter than. */
+  .daylight::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(90% 70% at 72% 30%, transparent 0%, rgb(88 100 124 / 0.03) 55%, rgb(88 100 124 / 0.06) 100%),
+      linear-gradient(to bottom, rgb(88 100 124 / 0.05), rgb(88 100 124 / 0.035));
+  }
+  .dark .daylight {
+    display: none;
+  }
+  @media (max-width: 767px) {
+    .daylight-sun {
+      width: 520px;
+      height: 900px;
+      margin-left: 0;
+      opacity: 0.8;
+    }
+    .daylight-leaves-near {
+      width: 440px;
+    }
+    .daylight-leaves-far {
+      display: none;
+    }
+  }
+  .daylight-sun {
+    position: absolute;
+    left: 50%;
+    top: -160px;
+    width: 780px;
+    height: 1240px;
+    margin-left: 40px;
+    transform: rotate(-4deg) skewX(-32deg);
+    transform-origin: top left;
+    animation: sun-on 2.2s var(--ease-out-soft) both, clouds 18s ease-in-out 2.4s infinite;
+  }
+  .daylight-window {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    gap: 46px 42px;
     filter: blur(6px);
   }
-  :where(html:not(.dark)) .lamp-hot {
-    width: 1.5px;
-    filter: none;
-    background: linear-gradient(to bottom, transparent 10%, rgb(224 156 38 / 0.35) 55%, rgb(214 128 24 / 0.95) 100%);
+  .daylight-window > span {
+    border-radius: 4px;
+    background:
+      linear-gradient(172deg, rgb(255 218 156 / 0.42), rgb(255 230 186 / 0.2) 55%, rgb(255 240 214 / 0.04)),
+      rgb(255 254 250);
+    box-shadow:
+      0 0 0 1px rgb(255 204 140 / 0.28),
+      0 0 30px 2px rgb(255 214 156 / 0.24);
   }
-  :where(html:not(.dark)) .lamp-base {
-    width: 360px;
-    height: 160px;
-    background: radial-gradient(ellipse 50% 70% at 50% 100%, rgb(224 156 38 / 0.28), transparent 72%);
+  /* Panes further down the page are dimmer: the light spreads as it falls. */
+  .daylight-window > span:nth-child(n + 3) {
+    opacity: 0.85;
   }
-  :where(html:not(.dark)) .flare-wide {
-    background: radial-gradient(ellipse 50% 50%, rgb(224 156 38 / 0.12), transparent 70%);
+  .daylight-window > span:nth-child(n + 5) {
+    opacity: 0.6;
   }
-  :where(html:not(.dark)) .flare-hot {
-    width: 180px;
-    height: 16px;
-    background: radial-gradient(ellipse 50% 50%, rgb(255 214 150 / 0.95), rgb(224 156 38 / 0.35) 45%, transparent 72%);
+  .daylight-leaves {
+    position: absolute;
+    color: rgb(58 70 94 / 0.16);
+    mix-blend-mode: multiply;
+    transform-origin: 100% 0;
   }
-  :where(html:not(.dark)) .rim-glow {
-    filter: blur(26px);
-    opacity: 0.2;
+  .daylight-leaves-near {
+    right: -40px;
+    top: 10px;
+    width: 760px;
+    filter: blur(3.5px);
+    animation: sway 7s ease-in-out infinite alternate;
+  }
+  .daylight-leaves-far {
+    right: 260px;
+    top: -40px;
+    width: 560px;
+    color: rgb(58 70 94 / 0.09);
+    filter: blur(8px);
+    transform: scaleX(-1) rotate(12deg);
+    animation: sway-far 9.5s ease-in-out 1s infinite alternate;
   }
   /* On phones the beam crosses the paragraph, so it glows a little less. */
   @media (max-width: 767px) {
@@ -552,8 +622,45 @@
   .animate-rise,
   .animate-ticker,
   .update-fill,
-  .update-ring {
+  .update-ring,
+  .daylight-sun,
+  .daylight-leaves {
     animation: none !important;
+  }
+}
+
+/* ---------- Daylight ---------- */
+@keyframes sun-on {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes clouds {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  45% {
+    opacity: 0.72;
+  }
+  60% {
+    opacity: 0.9;
+  }
+}
+@keyframes sway {
+  from {
+    transform: rotate(-2.2deg);
+  }
+  to {
+    transform: rotate(2.6deg) translateY(6px);
+  }
+}
+@keyframes sway-far {
+  from {
+    transform: scaleX(-1) rotate(10deg);
+  }
+  to {
+    transform: scaleX(-1) rotate(14.5deg) translateY(4px);
   }
 }
 
