@@ -9,6 +9,8 @@
  */
 
 const REPO = "webKing021/paperlight";
+/** Downloads of releases that were later removed from GitHub (v1.0.0: 3), so the total stays true. */
+export const RETIRED_DOWNLOADS = 3;
 
 type Release = { draft: boolean; assets: { name: string; download_count: number }[] };
 
@@ -20,7 +22,7 @@ export async function GET(): Promise<Response> {
   const token = process.env.GITHUB_TOKEN;
   if (token) headers.Authorization = `Bearer ${token}`;
 
-  let total = 0;
+  let total = RETIRED_DOWNLOADS;
   let releases = 0;
   try {
     for (let page = 1; page <= 10; page++) {

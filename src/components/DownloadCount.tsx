@@ -35,7 +35,7 @@ export function downloadsLabel(n: number): string {
 export function DownloadChip({ className }: { className?: string }) {
   const total = useDownloads();
   const shown = useCountUp(total);
-  if (total === null) return null;
+  if (!total) return null;
   return (
     <span
       className={cx(

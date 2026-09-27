@@ -107,12 +107,14 @@ async function countDownloads(): Promise<number | null> {
   }
   const res = await fetch(`https://api.github.com/repos/${REPO}/releases?per_page=100`);
   if (!res.ok) return null;
+  // Same rule as api/downloads.ts: add downloads of releases that were removed (v1.0.0: 3).
+  const retired = 3;
   const releases = (await res.json()) as { draft: boolean; assets: { name: string; download_count: number }[] }[];
   return releases
     .filter((r) => !r.draft)
     .flatMap((r) => r.assets)
     .filter((a) => /\.(exe|msi)$/i.test(a.name))
-    .reduce((sum, a) => sum + a.download_count, 0);
+    .reduce((sum, a) => sum + a.download_count, retired);
 }
 
 let downloadsPending: Promise<number | null> | null = null;

@@ -150,6 +150,7 @@ const SHOTS = [
   { id: "duplicates", label: "Duplicates", alt: "Identical copies grouped together" },
   { id: "storage", label: "Storage", alt: "Size by type and the largest documents" },
   { id: "settings", label: "Settings", alt: "Settings: choose which file formats are indexed" },
+  { id: "update", label: "Updates", alt: "A new version offered inside Paperlight, with what's new" },
   { id: "dark", label: "Dark theme", alt: "Paperlight in its dark theme" },
   { id: "welcome", label: "Welcome", alt: "The welcome screen on first run" },
 ];
