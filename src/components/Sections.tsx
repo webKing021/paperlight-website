@@ -1,7 +1,8 @@
-import { ArrowUpRight, EyeOff, FileLock2, Plus, Scale, Star, UserX } from "lucide-react";
+import { ArrowUpRight, Download, EyeOff, FileLock2, Plus, Scale, Star, UserX } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import type { Kind } from "../demo/data";
-import { AUTHOR_URL, formatStars, REPO_URL, useRepoInfo } from "../lib/github";
+import { AUTHOR_URL, formatStars, REPO_URL, useDownloads, useRepoInfo } from "../lib/github";
+import { downloadsLabel } from "./DownloadCount";
 import { DownloadButton } from "./Hero";
 import { FileIcon, GitHubIcon } from "./icons";
 import { Logo, ThemeToggle } from "./Nav";
@@ -50,14 +51,14 @@ export function Formats() {
 /* ------------------------------------------------------------------ Privacy */
 
 const NUMBERS = [
-  { value: "0", unit: "bytes", label: "sent over the network. Paperlight has no servers to send them to." },
+  { value: "0", unit: "bytes", label: "of your data leave your PC. It works offline; it only goes online for optional updates." },
   { value: "~6", unit: "MB", label: "of memory when the window is closed and it waits in the tray." },
   { value: "0", unit: "% CPU", label: "when idle. No polling: the disk tells Paperlight what changed." },
   { value: "~5", unit: "MB", label: "installer. Built with Rust and Tauri, not a bundled browser." },
 ];
 
 const PROMISES = [
-  { icon: EyeOff, title: "Local only", body: "No network access, no telemetry, no analytics. The index lives on your disk." },
+  { icon: EyeOff, title: "Works offline", body: "No internet needed to index, search or open. It only goes online to check for a new version, and updating is optional." },
   { icon: FileLock2, title: "Read-only", body: "Your files are never modified, moved, renamed or deleted. Not even duplicates." },
   { icon: UserX, title: "No account", body: "Install it and use it. There's nothing to sign up for and nothing to pay." },
 ];
@@ -158,7 +159,7 @@ export function Screenshots() {
   const shot = SHOTS.find((s) => s.id === active)!;
   return (
     <section id="screenshots" className="mx-auto max-w-[1200px] px-5 pt-36 sm:px-8">
-      <SectionHeading title={["The real thing."]} lead="Screenshots of Paperlight 1.0 on Windows 11, with made-up sample documents." />
+      <SectionHeading title={["The real thing."]} lead="Screenshots of Paperlight on Windows 11, with made-up sample documents." />
       <Reveal className="-mx-5 mt-10 flex gap-1.5 overflow-x-auto px-5 pb-1 [scrollbar-width:none] sm:mx-0 sm:px-0" role="tablist" aria-label="Screenshots">
         {SHOTS.map((s) => (
           <button
@@ -248,6 +249,7 @@ export function Keyboard() {
 
 export function OpenSource() {
   const { stars } = useRepoInfo();
+  const downloads = useDownloads();
   return (
     <section className="mx-auto max-w-[1200px] px-5 pt-36 sm:px-8">
       <Reveal
@@ -297,6 +299,11 @@ export function OpenSource() {
           <span className="flex items-center gap-2">
             <GitHubIcon className="size-4" /> webKing021/paperlight
           </span>
+          {downloads !== null && (
+            <span className="flex items-center gap-2">
+              <Download className="size-4 text-lamp" /> {downloads.toLocaleString("en-US")} {downloadsLabel(downloads)}
+            </span>
+          )}
           <span>Tauri 2 · Rust · SQLite FTS5 · React</span>
         </div>
       </Reveal>
@@ -313,7 +320,11 @@ const FAQ: { q: string; a: ReactNode }[] = [
   },
   {
     q: "Does it upload, change or delete my files?",
-    a: "No. Paperlight only reads your documents to index them. It has no network access at all, and it never modifies, moves, renames or deletes a file, not even duplicates it finds.",
+    a: "No. Paperlight only reads your documents to index them. Nothing is uploaded and it works fully offline: the only time it goes online is to check whether a new version exists, and updating is optional. It never modifies, moves, renames or deletes a file, not even duplicates it finds.",
+  },
+  {
+    q: "How do I get new versions?",
+    a: "You download Paperlight once. Updating is optional: it keeps working as it is, fully offline. When a new version with new features is out, Paperlight tells you what's new and installs it in a few seconds if you choose Update now, keeping your index, favourites, tags and settings. The check can be turned off in Settings → About. (Version 1.0.0 came before the updater: install the latest version once and it updates itself from then on.)",
   },
   {
     q: "Which files can it search?",
@@ -371,6 +382,7 @@ export function Faq() {
 
 export function FinalCta() {
   const { version } = useRepoInfo();
+  const downloads = useDownloads();
   return (
     <section className="relative mt-40 overflow-hidden">
       <div
@@ -384,7 +396,8 @@ export function FinalCta() {
           className="text-[clamp(2.75rem,7vw,5.5rem)] leading-[1] font-semibold tracking-[-0.045em] text-fg"
         />
         <Reveal as="p" index={2} className="mx-auto mt-6 max-w-md text-lg text-muted">
-          Free for Windows 10 and 11. Version {version}.
+          Free for Windows 10 and 11. Version {version}
+          {downloads ? `, downloaded ${downloads.toLocaleString("en-US")} ${downloads === 1 ? "time" : "times"}` : ""}. Updates itself.
         </Reveal>
         <Reveal index={3} className="mt-9 flex justify-center">
           <DownloadButton />

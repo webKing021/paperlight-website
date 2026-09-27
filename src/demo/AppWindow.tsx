@@ -3,6 +3,7 @@ import { forwardRef, type KeyboardEvent, useCallback, useEffect, useImperativeHa
 import { Mark } from "../components/icons";
 import { cx } from "../components/ui";
 import { DAY, formatSize } from "../lib/format";
+import { useRepoInfo } from "../lib/github";
 import { useTheme } from "../lib/theme";
 import { KINDS, TAGS, makeLibrary, type Doc, type Kind } from "./data";
 import { BucketTiles, DetailsPane, DocRow, DuplicatesView, KeyCap, QuickSearch, Sidebar, StorageView, type View } from "./parts";
@@ -70,6 +71,7 @@ function TitleBar() {
 
 export const AppWindow = forwardRef<AppWindowHandle, { fullscreen?: boolean }>(function AppWindow({ fullscreen }, ref) {
   const [now] = useState(() => Date.now());
+  const { version } = useRepoInfo();
   const [docs, setDocs] = useState(() => makeLibrary(now));
   const [view, setView] = useState<View>("overview");
   const [bucket, setBucket] = useState<Kind>("pdf");
@@ -342,7 +344,7 @@ export const AppWindow = forwardRef<AppWindowHandle, { fullscreen?: boolean }>(f
         <button type="button" onClick={rescan} className="hidden items-center gap-1 rounded px-1.5 py-0.5 hover:bg-hover hover:text-ink sm:flex">
           <RotateCw className={cx("size-3.5", scan === "scanning" && "animate-spin")} /> Rescan
         </button>
-        <span className="hidden text-pencil sm:inline">v1.0.0</span>
+        <span className="hidden text-pencil sm:inline">v{version}</span>
       </div>
 
       {quick && (

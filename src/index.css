@@ -550,9 +550,39 @@
   .rim-glow,
   .window-rise,
   .animate-rise,
-  .animate-ticker {
+  .animate-ticker,
+  .update-fill,
+  .update-ring {
     animation: none !important;
   }
+}
+
+/* ---------- "Updates itself" card: the app's update ring and bar filling on a loop ---------- */
+@keyframes update-fill {
+  0%,
+  18% {
+    width: 0;
+  }
+  72%,
+  100% {
+    width: 100%;
+  }
+}
+@keyframes update-ring {
+  0%,
+  18% {
+    stroke-dasharray: 0 100;
+  }
+  72%,
+  100% {
+    stroke-dasharray: 100 100;
+  }
+}
+.update-fill {
+  animation: update-fill 4.8s var(--ease-out-soft) infinite;
+}
+.update-ring {
+  animation: update-ring 4.8s var(--ease-out-soft) infinite;
 }
 
 /* ---------- Scroll reveals (see src/lib/reveal.ts) ---------- */

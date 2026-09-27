@@ -1,8 +1,9 @@
-import { Check, FolderOpen, Search, Star } from "lucide-react";
+import { ArrowRight, ArrowUp, Check, ChevronRight, FolderOpen, Search, Settings, Star } from "lucide-react";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { KINDS, makeLibrary, TAGS, type Kind } from "../demo/data";
 import { search } from "../demo/search";
 import { formatSize } from "../lib/format";
+import { useRepoInfo } from "../lib/github";
 import { FileIcon, Mark } from "./icons";
 import { spotlight } from "../lib/reveal";
 import { Reveal } from "./Reveal";
@@ -228,6 +229,80 @@ function Organise() {
   );
 }
 
+/** The app's update ring: full while an update waits, filling as it downloads. */
+function Ring({ size, animated, children }: { size: number; animated?: boolean; children: ReactNode }) {
+  return (
+    <span className="relative inline-flex shrink-0 items-center justify-center" style={{ width: size, height: size }}>
+      <svg viewBox="0 0 36 36" className="absolute inset-0 -rotate-90" aria-hidden="true">
+        <circle cx="18" cy="18" r="16.5" fill="none" stroke="var(--line-strong)" strokeWidth="2.5" />
+        <circle
+          cx="18"
+          cy="18"
+          r="16.5"
+          fill="none"
+          stroke="var(--app-lamp)"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          pathLength={100}
+          strokeDasharray="100 100"
+          className={animated ? "update-ring" : undefined}
+        />
+      </svg>
+      {children}
+    </span>
+  );
+}
+
+/** The sidebar card and the dialog Paperlight shows when a new version is out. */
+function Updates() {
+  const { version } = useRepoInfo();
+  const [major, minor] = version.split(".").map(Number);
+  const next = Number.isFinite(minor) ? `${major}.${minor + 1}.0` : "next";
+  return (
+    <div className="font-app flex h-full flex-col items-center justify-center gap-4 sm:flex-row sm:gap-6">
+      <div className="w-full max-w-[250px] rounded-xl border border-line bg-paper-2 p-2">
+        <div className="flex items-center gap-2.5 rounded-lg border border-app-lamp/40 bg-lamp-wash/45 py-2 pr-2.5 pl-1.5">
+          <Ring size={28}>
+            <ArrowUp className="size-3.5 text-ink" strokeWidth={2.4} />
+          </Ring>
+          <span className="min-w-0 flex-1">
+            <span className="block truncate text-[13px] leading-tight font-semibold text-ink">Update available</span>
+            <span className="mt-0.5 block truncate text-[11.5px] leading-tight text-graphite">Paperlight {next} is ready</span>
+          </span>
+          <ChevronRight className="size-4 text-graphite" />
+        </div>
+        <div className="mt-1 flex h-8 items-center gap-3 px-3 text-[13px] text-ink-2">
+          <Settings className="size-4" strokeWidth={1.7} /> Settings
+        </div>
+      </div>
+      <div className="w-full max-w-[320px] overflow-hidden rounded-xl border border-line-strong bg-paper shadow-[0_20px_50px_-24px_rgb(0_0_0/0.5)]">
+        <div className="flex items-center gap-3 p-4">
+          <Ring size={44} animated>
+            <Mark className="size-[18px]" stem="var(--ink)" bowl="var(--app-lamp)" />
+          </Ring>
+          <div className="min-w-0">
+            <div className="truncate text-[14.5px] font-semibold text-ink">A new Paperlight is ready</div>
+            <div className="mt-1 flex items-center gap-1.5 text-[11.5px]">
+              <span className="rounded border border-line-strong px-1 text-graphite tabular-nums">{version}</span>
+              <ArrowRight className="size-3 text-pencil" />
+              <span className="rounded bg-app-lamp px-1 font-semibold text-[#1b1b1e] tabular-nums">{next}</span>
+            </div>
+          </div>
+        </div>
+        <div className="border-t border-line bg-paper-2 px-4 py-3">
+          <div className="flex justify-between text-[11.5px]">
+            <span className="font-medium text-ink">Downloading…</span>
+            <span className="text-pencil">keeps your index</span>
+          </div>
+          <div className="mt-2 h-1 overflow-hidden rounded-full bg-selected">
+            <div className="update-fill h-full w-full rounded-full bg-app-lamp" />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function Choose() {
   const [on, setOn] = useState<Record<string, boolean>>({ PDF: true, Word: true, Excel: true, PowerPoint: false });
   return (
@@ -319,6 +394,14 @@ export function Features() {
           body="Pick the formats and folders. System folders, AppData and developer clutter are skipped from the start."
         >
           <Choose />
+        </Card>
+        <Card
+          index={0}
+          className="md:col-span-2 lg:col-span-6"
+          title="Updates itself"
+          body="Download it once; it works offline from then on. When a new version brings new features, Paperlight shows what's new and, if you want it, installs it in a few seconds, signed and verified, keeping your index, favourites and tags."
+        >
+          <Updates />
         </Card>
       </div>
     </section>

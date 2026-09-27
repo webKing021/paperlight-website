@@ -1,13 +1,14 @@
 import { Code2, Download, Feather, ScanText, WifiOff } from "lucide-react";
 import { Demo } from "../demo/Demo";
 import { REPO_URL, useRepoInfo } from "../lib/github";
+import { DownloadStat } from "./DownloadCount";
 import { GitHubIcon } from "./icons";
 
 const FACTS = [
   { icon: ScanText, strong: "Searches inside", rest: "every document" },
   { icon: Feather, strong: "~5 MB", rest: "installer" },
   { icon: Code2, strong: "Open source", rest: "MIT" },
-  { icon: WifiOff, strong: "100% offline", rest: "no account" },
+  { icon: WifiOff, strong: "Works offline", rest: "no account" },
 ];
 
 export function DownloadButton({ size = "lg" }: { size?: "lg" | "md" }) {
@@ -45,7 +46,7 @@ export function Hero() {
           style={{ animationDelay: "80ms" }}
         >
           Paperlight finds any PDF, Word, Excel or PowerPoint file on your PC by its name, its folder or the words inside it.
-          It indexes once, keeps up as files change, and never sends anything anywhere.
+          It indexes once, keeps up as files change, and never sends your data anywhere.
         </p>
 
         <ul className="animate-rise mt-7 flex flex-wrap gap-x-6 gap-y-2.5 text-[15px]" style={{ animationDelay: "140ms" }}>
@@ -68,6 +69,7 @@ export function Hero() {
           >
             <GitHubIcon className="size-4" /> View source
           </a>
+          <DownloadStat className="ml-2 border-l border-border-2 pl-5" />
         </div>
         <p className="animate-rise mt-4 text-[14px] text-muted" style={{ animationDelay: "240ms" }}>
           <a href={releaseUrl} target="_blank" rel="noreferrer" className="underline decoration-border-2 underline-offset-4 hover:text-fg hover:decoration-fg">

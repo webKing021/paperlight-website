@@ -11,7 +11,7 @@
     { "source": "/github", "destination": "https://github.com/webKing021/paperlight", "permanent": false },
     { "source": "/releases", "destination": "https://github.com/webKing021/paperlight/releases", "permanent": false }
   ],
-  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }],
+  "rewrites": [{ "source": "/((?!api/).*)", "destination": "/index.html" }],
   "headers": [
     {
       "source": "/assets/(.*)",
