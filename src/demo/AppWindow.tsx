@@ -240,7 +240,7 @@ export const AppWindow = forwardRef<AppWindowHandle, { fullscreen?: boolean }>(f
             <div className="px-5 pt-5 pb-3">
               <div className="flex items-baseline gap-2.5">
                 <h3 className="text-[22px] font-semibold tracking-[-0.01em] text-ink">{heading}</h3>
-                {(searching || (!insight && view !== "overview")) && <span className="text-[13px] text-pencil">{rows.length} documents</span>}
+                {(searching || (!insight && view !== "overview")) && <span className="text-[13px] text-pencil">{rows.length} {rows.length === 1 ? "document" : "documents"}</span>}
               </div>
               {view === "overview" && !searching && (
                 <p className="mt-0.5 text-[13px] text-graphite">
@@ -264,7 +264,7 @@ export const AppWindow = forwardRef<AppWindowHandle, { fullscreen?: boolean }>(f
                 <div className="mt-6 mb-1 flex flex-wrap items-center gap-3">
                   <div className="flex items-baseline gap-2">
                     <span className="text-[17px] font-semibold text-ink">{KINDS.find((k) => k.id === bucket)!.bucket}</span>
-                    <span className="text-[12.5px] text-pencil">{rows.length} documents</span>
+                    <span className="text-[12.5px] text-pencil">{rows.length} {rows.length === 1 ? "document" : "documents"}</span>
                   </div>
                   <label className="ml-auto flex h-8 w-full items-center gap-2 rounded-lg border border-line px-2.5 sm:w-64">
                     <Search className="size-3.5 text-graphite" />

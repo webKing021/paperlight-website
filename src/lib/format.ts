@@ -7,12 +7,14 @@ export function formatSize(bytes: number): string {
   return `${mb < 10 ? mb.toFixed(1) : Math.round(mb)} MB`;
 }
 
+const ago = (n: number, unit: string) => `${n} ${unit}${n === 1 ? "" : "s"} ago`;
+
 /** "2 days ago" for the last month, then a date, the way the app shows it. */
 export function formatAgo(time: number, now = Date.now()): string {
   const diff = now - time;
   const days = Math.floor(diff / DAY);
-  if (diff < 60 * 60 * 1000) return `${Math.max(1, Math.round(diff / 60000))} minutes ago`;
-  if (days < 1) return `${Math.round(diff / 3600000)} hours ago`;
+  if (diff < 60 * 60 * 1000) return ago(Math.max(1, Math.round(diff / 60000)), "minute");
+  if (days < 1) return ago(Math.max(1, Math.round(diff / 3600000)), "hour");
   if (days === 1) return "yesterday";
   if (days < 30) return `${days} days ago`;
   return new Date(time).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
