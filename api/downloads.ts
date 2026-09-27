@@ -9,8 +9,8 @@
  */
 
 const REPO = "webKing021/paperlight";
-/** Downloads of releases that were later removed from GitHub (v1.0.0: 3), so the total stays true. */
-export const RETIRED_DOWNLOADS = 3;
+/** Downloads of releases that were later removed from GitHub (v1.0.0: 3, v1.1.0: 3), so the total stays true. */
+export const RETIRED_DOWNLOADS = 6;
 
 type Release = { draft: boolean; assets: { name: string; download_count: number }[] };
 

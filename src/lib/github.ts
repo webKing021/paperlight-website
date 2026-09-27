@@ -16,7 +16,7 @@ export type RepoInfo = {
 /** What the page shows before (or without) the GitHub API: the current release. */
 const FALLBACK: RepoInfo = {
   stars: null,
-  version: "1.1.0",
+  version: "1.1.1",
   downloadUrl: RELEASES_URL,
   sizeMb: 5.1,
   releaseUrl: RELEASES_URL,
@@ -107,8 +107,8 @@ async function countDownloads(): Promise<number | null> {
   }
   const res = await fetch(`https://api.github.com/repos/${REPO}/releases?per_page=100`);
   if (!res.ok) return null;
-  // Same rule as api/downloads.ts: add downloads of releases that were removed (v1.0.0: 3).
-  const retired = 3;
+  // Same rule as api/downloads.ts: add downloads of releases that were removed (v1.0.0: 3, v1.1.0: 3).
+  const retired = 6;
   const releases = (await res.json()) as { draft: boolean; assets: { name: string; download_count: number }[] }[];
   return releases
     .filter((r) => !r.draft)
