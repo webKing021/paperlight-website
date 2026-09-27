@@ -1,3 +1,4 @@
+import { Download } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useDownloads } from "../lib/github";
 import { cx } from "./ui";
@@ -27,26 +28,28 @@ export function downloadsLabel(n: number): string {
   return n === 1 ? "download" : "downloads";
 }
 
-/** The real number of installer downloads from GitHub, next to the download buttons. */
-export function DownloadStat({ className }: { className?: string }) {
+/**
+ * The real number of installer downloads from GitHub, as an amber chip on its own solid
+ * background so the hero's light beam can't wash it out.
+ */
+export function DownloadChip({ className }: { className?: string }) {
   const total = useDownloads();
   const shown = useCountUp(total);
   if (total === null) return null;
   return (
-    <div
-      className={cx("animate-fade flex h-13 flex-col justify-center", className)}
+    <span
+      className={cx(
+        "animate-fade inline-flex h-8 items-center gap-2 rounded-full border border-lamp/45 bg-[color-mix(in_oklab,var(--lamp)_14%,var(--bg))] pr-3.5 pl-1 text-[14px] whitespace-nowrap shadow-[0_0_24px_-8px_rgb(234_176_76/0.6)] backdrop-blur-md",
+        className,
+      )}
       title="Installer downloads across all releases, counted by GitHub"
     >
-      <span className="text-[24px] leading-none font-semibold tracking-[-0.03em] text-fg tabular-nums">
-        {shown.toLocaleString("en-US")}
+      <span className="relative flex size-6 items-center justify-center rounded-full bg-lamp text-[#1b1b1e]">
+        <span className="absolute inset-0 animate-ping rounded-full bg-lamp opacity-50 [animation-iteration-count:3]" />
+        <Download className="relative size-3.5" strokeWidth={2.4} />
       </span>
-      <span className="mt-1.5 flex items-center gap-1.5 text-[13px] text-muted">
-        <span className="relative flex size-1.5">
-          <span className="absolute inline-flex size-full animate-ping rounded-full bg-lamp opacity-60 [animation-iteration-count:3]" />
-          <span className="relative inline-flex size-1.5 rounded-full bg-lamp" />
-        </span>
-        {downloadsLabel(total)} so far
-      </span>
-    </div>
+      <span className="font-semibold text-fg tabular-nums">{shown.toLocaleString("en-US")}</span>
+      <span className="text-fg-2">{downloadsLabel(total)}</span>
+    </span>
   );
 }

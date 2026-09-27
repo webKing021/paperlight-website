@@ -1,7 +1,7 @@
 import { Code2, Download, Feather, ScanText, WifiOff } from "lucide-react";
 import { Demo } from "../demo/Demo";
 import { REPO_URL, useRepoInfo } from "../lib/github";
-import { DownloadStat } from "./DownloadCount";
+import { DownloadChip } from "./DownloadCount";
 import { GitHubIcon } from "./icons";
 
 const FACTS = [
@@ -69,13 +69,15 @@ export function Hero() {
           >
             <GitHubIcon className="size-4" /> View source
           </a>
-          <DownloadStat className="ml-2 border-l border-border-2 pl-5" />
         </div>
-        <p className="animate-rise mt-4 text-[14px] text-muted" style={{ animationDelay: "240ms" }}>
+        <p className="animate-rise mt-5 flex flex-wrap items-center gap-x-3 gap-y-2 text-[14px] text-muted" style={{ animationDelay: "240ms" }}>
+          <DownloadChip />
+          <span>
           <a href={releaseUrl} target="_blank" rel="noreferrer" className="underline decoration-border-2 underline-offset-4 hover:text-fg hover:decoration-fg">
             Version {version}
           </a>{" "}
           for Windows 10 and 11 (x64){sizeMb ? ` · ${sizeMb} MB` : ""} · no admin rights needed
+          </span>
         </p>
       </div>
 

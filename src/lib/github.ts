@@ -22,8 +22,8 @@ const FALLBACK: RepoInfo = {
   releaseUrl: RELEASES_URL,
 };
 
-const CACHE_KEY = "paperlight-repo";
-const CACHE_MS = 60 * 60 * 1000;
+const CACHE_KEY = "paperlight-repo-v2";
+const CACHE_MS = 10 * 60 * 1000;
 
 type Release = {
   tag_name: string;
@@ -49,7 +49,7 @@ async function load(): Promise<RepoInfo> {
 
 let pending: Promise<RepoInfo> | null = null;
 
-/** Star count and latest installer from the GitHub API, cached for an hour per visitor. */
+/** Star count and latest installer from the GitHub API, cached for 10 minutes per visitor. */
 export function useRepoInfo(): RepoInfo {
   const [info, setInfo] = useState<RepoInfo>(() => {
     try {
