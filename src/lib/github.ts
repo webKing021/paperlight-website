@@ -16,9 +16,9 @@ export type RepoInfo = {
 /** What the page shows before (or without) the GitHub API: the current release. */
 const FALLBACK: RepoInfo = {
   stars: null,
-  version: "1.1.1",
+  version: "1.2.0",
   downloadUrl: RELEASES_URL,
-  sizeMb: 5.1,
+  sizeMb: 5.2,
   releaseUrl: RELEASES_URL,
 };
 

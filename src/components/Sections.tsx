@@ -33,7 +33,7 @@ export function Formats() {
       <Reveal className="card-depth flex flex-col gap-6 rounded-2xl border border-border bg-card p-6 sm:p-8 lg:flex-row lg:items-center lg:gap-10">
         <div className="lg:w-72 lg:shrink-0">
           <h3 className="text-[17px] font-semibold text-fg">Reads the text of 12 formats</h3>
-          <p className="mt-1 text-[15px] text-muted">Older doc, dot, ppt and pps files are found by name.</p>
+          <p className="mt-1 text-[15px] text-muted">Older doc, dot, ppt and pps files are found by name. Plain txt and md files can be switched on.</p>
         </div>
         <ul className="grid grid-cols-4 gap-x-3 gap-y-4 min-[420px]:grid-cols-6 xl:flex xl:flex-wrap xl:gap-x-5">
           {READ.map(([ext, kind], i) => (
@@ -218,10 +218,12 @@ const KEYS: [string[], string][] = [
   [["Ctrl", "K"], "Search"],
   [["Enter"], "Open"],
   [["Ctrl", "Enter"], "Show in folder"],
+  [["Ctrl", "C"], "Copy file"],
   [["Ctrl", "Shift", "C"], "Copy path"],
   [["Ctrl", "D"], "Favourite"],
   [["Ctrl", "T"], "Tag"],
   [["Ctrl", "I"], "Details panel"],
+  [["Ctrl", "B"], "Sidebar"],
 ];
 
 export function Keyboard() {
@@ -329,7 +331,7 @@ const FAQ: { q: string; a: ReactNode }[] = [
   },
   {
     q: "Which files can it search?",
-    a: "The text inside PDF, Word (docx, odt, rtf), Excel (xlsx, xlsm, xlsb, xls, ods, csv) and PowerPoint (pptx, odp) files. Older doc, dot, ppt and pps files are found by name and folder. You can switch any format off.",
+    a: "The text inside PDF, Word (docx, odt, rtf), Excel (xlsx, xlsm, xlsb, xls, ods, csv) and PowerPoint (pptx, odp) files, up to 200,000 characters per document, so long reports are searched to the end. Older doc, dot, ppt and pps files are found by name and folder. Plain txt and md files are off to begin with and can be switched on. You can switch any format off.",
   },
   {
     q: "Will it slow my PC down?",
@@ -350,7 +352,7 @@ const FAQ: { q: string; a: ReactNode }[] = [
   },
   {
     q: "Alt+Space is already used on my PC.",
-    a: "Paperlight falls back to Ctrl+Shift+Space, then Ctrl+Alt+P, if another app already owns the shortcut.",
+    a: "Choose your own in Settings → In the background → Change. If you don't, Paperlight falls back to Ctrl+Shift+Space, then Ctrl+Alt+P, when another app already owns the shortcut.",
   },
   {
     q: "Is there a Mac or Linux version?",

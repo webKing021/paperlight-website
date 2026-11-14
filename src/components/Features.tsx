@@ -1,4 +1,4 @@
-import { ArrowRight, ArrowUp, Check, ChevronRight, FolderOpen, Search, Settings, Star } from "lucide-react";
+import { ArrowRight, ArrowUp, Check, ChevronRight, FolderOpen, Mail, Search, Settings, Star } from "lucide-react";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { KINDS, makeLibrary, TAGS, type Kind } from "../demo/data";
 import { search } from "../demo/search";
@@ -229,6 +229,25 @@ function Organise() {
   );
 }
 
+/** A result being dragged out of Paperlight into another app. */
+function DragOut() {
+  return (
+    <div className="font-app flex h-full flex-col justify-center gap-3">
+      <div className="flex w-[82%] -rotate-2 items-center gap-2.5 rounded-lg border border-line-strong bg-paper px-3 py-2 shadow-[0_16px_40px_-20px_rgb(0_0_0/0.5)]">
+        <FileIcon kind="pdf" size={24} />
+        <span className="min-w-0 flex-1 truncate text-[12.5px] text-ink">Invoice INV-2064.pdf</span>
+      </div>
+      <div className="ml-auto flex w-[82%] items-center gap-2.5 rounded-lg border border-dashed border-line-strong bg-paper-2 px-3 py-3 text-[12.5px] text-graphite">
+        <Mail className="size-4 shrink-0" strokeWidth={1.7} />
+        Drop it into an email, a chat or a folder
+      </div>
+      <div className="flex items-center gap-1.5 text-[12px] text-pencil">
+        or <Kbd>Ctrl</Kbd> <Kbd>C</Kbd> to copy the file
+      </div>
+    </div>
+  );
+}
+
 /** The app's update ring: full while an update waits, filling as it downloads. */
 function Ring({ size, animated, children }: { size: number; animated?: boolean; children: ReactNode }) {
   return (
@@ -358,7 +377,7 @@ export function Features() {
           index={0}
           className="md:col-span-2 lg:col-span-4"
           title="Search inside documents"
-          body="Names, folders and the text of PDFs, Word, Excel and PowerPoint files. Prefixes work, typos are forgiven, and the matching passage is highlighted."
+          body="Names, folders and the text of PDFs, Word, Excel and PowerPoint files: whole documents, not just the first pages. Prefixes work, typos are forgiven, and the matching passage is highlighted."
         >
           <TypingSearch />
         </Card>
@@ -366,7 +385,7 @@ export function Features() {
           index={1}
           className="lg:col-span-2"
           title="Quick search from any app"
-          body="Press Alt+Space wherever you are, type a few letters, press Enter. The document opens."
+          body="Press Alt+Space wherever you are (or a shortcut you choose), type a few letters, press Enter. The document opens."
         >
           <QuickKeys />
         </Card>
@@ -397,7 +416,15 @@ export function Features() {
         </Card>
         <Card
           index={0}
-          className="md:col-span-2 lg:col-span-6"
+          className="md:col-span-2 lg:col-span-2"
+          title="Drag it where you need it"
+          body="Found it? Drag the result straight into an email, a chat or a folder. The original stays where it is."
+        >
+          <DragOut />
+        </Card>
+        <Card
+          index={1}
+          className="md:col-span-2 lg:col-span-4"
           title="Updates itself"
           body="Download it once; it works offline from then on. When a new version brings new features, Paperlight shows what's new and, if you want it, installs it in a few seconds, signed and verified, keeping your index, favourites and tags."
         >

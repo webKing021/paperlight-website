@@ -29,8 +29,11 @@ Documents pile up in Downloads, on the Desktop, in project folders and on old dr
 Paperlight reads them once, keeps up as they change, and puts any of them a few keystrokes away.
 
 - **Search inside documents.** Names, folders and the text of PDF, Word, Excel and PowerPoint
-  files. Prefixes work, typos are forgiven, and the matching passage is highlighted.
-- **Quick search from any app.** Press <kbd>Alt</kbd>+<kbd>Space</kbd>, type a few letters,
+  files, whole documents and not just the first pages. Prefixes work, typos are forgiven, and
+  the matching passage is highlighted.
+- **Drag it where you need it.** Drag a result into an email, a chat or a folder, or copy the
+  file with <kbd>Ctrl</kbd>+<kbd>C</kbd>.
+- **Quick search from any app.** Press <kbd>Alt</kbd>+<kbd>Space</kbd> (or a shortcut you choose), type a few letters,
   press <kbd>Enter</kbd>. The document opens.
 - **Always current.** New, renamed, moved and deleted files show up within a second, with no
   rescans.
