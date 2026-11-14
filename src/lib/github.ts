@@ -20,7 +20,7 @@ export type LinuxPackage = { label: string; url: string };
 /** What the page shows before (or without) the GitHub API: the current release. */
 const FALLBACK: RepoInfo = {
   stars: null,
-  version: "1.2.0",
+  version: "1.2.1",
   downloadUrl: RELEASES_URL,
   sizeMb: 5.2,
   releaseUrl: RELEASES_URL,
