@@ -11,7 +11,11 @@ export type RepoInfo = {
   downloadUrl: string;
   sizeMb: number | null;
   releaseUrl: string;
+  /** Linux packages of the latest release; `null` when it has none (so nothing is offered). */
+  linux: LinuxPackage[] | null;
 };
+
+export type LinuxPackage = { label: string; url: string };
 
 /** What the page shows before (or without) the GitHub API: the current release. */
 const FALLBACK: RepoInfo = {
@@ -20,9 +24,10 @@ const FALLBACK: RepoInfo = {
   downloadUrl: RELEASES_URL,
   sizeMb: 5.2,
   releaseUrl: RELEASES_URL,
+  linux: null,
 };
 
-const CACHE_KEY = "paperlight-repo-v2";
+const CACHE_KEY = "paperlight-repo-v3";
 const CACHE_MS = 10 * 60 * 1000;
 
 type Release = {
@@ -38,7 +43,18 @@ async function load(): Promise<RepoInfo> {
   ]);
   const rel = release as Release | null;
   const setup = rel?.assets.find((a) => /setup\.exe$/i.test(a.name)) ?? rel?.assets.find((a) => /\.exe$/i.test(a.name));
+  const linux = (
+    [
+      [".deb", /\.deb$/i],
+      [".rpm", /\.rpm$/i],
+      ["AppImage", /\.AppImage$/i],
+    ] as const
+  ).flatMap(([label, pattern]) => {
+    const asset = rel?.assets.find((a) => pattern.test(a.name));
+    return asset ? [{ label, url: asset.browser_download_url }] : [];
+  });
   return {
+    linux: linux.length ? linux : null,
     stars: typeof repo?.stargazers_count === "number" ? repo.stargazers_count : null,
     version: rel?.tag_name?.replace(/^v/, "") ?? FALLBACK.version,
     downloadUrl: setup?.browser_download_url ?? FALLBACK.downloadUrl,
@@ -113,7 +129,7 @@ async function countDownloads(): Promise<number | null> {
   return releases
     .filter((r) => !r.draft)
     .flatMap((r) => r.assets)
-    .filter((a) => /\.(exe|msi)$/i.test(a.name))
+    .filter((a) => /\.(exe|msi|deb|rpm|AppImage)$/i.test(a.name))
     .reduce((sum, a) => sum + a.download_count, retired);
 }
 

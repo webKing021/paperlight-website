@@ -31,7 +31,7 @@ export function DownloadButton({ size = "lg" }: { size?: "lg" | "md" }) {
 }
 
 export function Hero() {
-  const { version, sizeMb, releaseUrl } = useRepoInfo();
+  const { version, sizeMb, releaseUrl, linux } = useRepoInfo();
 
   return (
     <section className="relative pt-32 sm:pt-40">
@@ -83,6 +83,19 @@ export function Hero() {
           for Windows 10 and 11 (x64){sizeMb ? ` · ${sizeMb} MB` : ""} · no admin rights needed
           </span>
         </p>
+        {linux && (
+          <p className="animate-rise mt-2.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[14px] text-muted" style={{ animationDelay: "260ms" }}>
+            <span>Linux (beta):</span>
+            {linux.map((p, i) => (
+              <span key={p.label} className="flex items-center gap-x-2">
+                {i > 0 && <span aria-hidden="true">·</span>}
+                <a href={p.url} className="underline decoration-border-2 underline-offset-4 hover:text-fg hover:decoration-fg">
+                  {p.label}
+                </a>
+              </span>
+            ))}
+          </p>
+        )}
       </div>
 
       <div className="relative mx-auto mt-20 max-w-[1240px] px-3 sm:mt-24 sm:px-8">

@@ -356,9 +356,32 @@ const FAQ: { q: string; a: ReactNode }[] = [
   },
   {
     q: "Is there a Mac or Linux version?",
-    a: "Not yet. Paperlight is made for Windows 10 and 11 first. It's built on Tauri, which runs on macOS and Linux too, so contributions are welcome.",
+    a: <OtherSystems />,
   },
 ];
+
+/** The answer follows the latest release: Linux is only mentioned as available when it is. */
+function OtherSystems() {
+  const { linux, releaseUrl } = useRepoInfo();
+  if (!linux) {
+    return (
+      <>
+        Not yet. Paperlight is made for Windows 10 and 11 first. A Linux version is being worked on, and it's built on Tauri,
+        which runs on macOS too, so contributions are welcome.
+      </>
+    );
+  }
+  return (
+    <>
+      Linux: yes, as a beta. The{" "}
+      <a href={releaseUrl} target="_blank" rel="noreferrer" className="underline underline-offset-4 hover:text-fg">
+        latest release
+      </a>{" "}
+      has {linux.map((p) => p.label).join(", ")} packages. On Linux it doesn't update itself yet, and the quick-search shortcut
+      needs X11. There is no Mac version yet; it's built on Tauri, which runs on macOS too, so contributions are welcome.
+    </>
+  );
+}
 
 export function Faq() {
   return (

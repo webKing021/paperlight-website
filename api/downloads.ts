@@ -33,8 +33,8 @@ export async function GET(): Promise<Response> {
         if (release.draft) continue;
         releases++;
         for (const asset of release.assets) {
-          // Installers only: not signatures (.sig) or the updater's latest.json.
-          if (/\.(exe|msi)$/i.test(asset.name)) total += asset.download_count;
+          // Installers and packages only: not signatures (.sig) or the updater's latest.json.
+          if (/\.(exe|msi|deb|rpm|AppImage)$/i.test(asset.name)) total += asset.download_count;
         }
       }
       if (list.length < 100) break;
