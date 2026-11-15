@@ -93,7 +93,6 @@
   --font-sans: "Geist Variable", "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif;
   /* Inside the demo window: Windows' own typeface, like the real app. */
   --font-app: "Segoe UI Variable Text", "Segoe UI", "Geist Variable", system-ui, sans-serif;
-  --font-mono: "Cascadia Mono", "SF Mono", Consolas, monospace;
 
   --color-bg: var(--bg);
   --color-bg-2: var(--bg-2);
@@ -178,22 +177,6 @@
 @keyframes fade {
   from {
     opacity: 0;
-  }
-}
-
-@keyframes ticker {
-  0% {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  10%,
-  85% {
-    opacity: 1;
-    transform: none;
-  }
-  100% {
-    opacity: 0;
-    transform: translateY(-6px);
   }
 }
 
@@ -350,17 +333,8 @@
   .animate-fade {
     animation: fade 200ms ease-out both;
   }
-  .animate-ticker {
-    animation: ticker 2.6s var(--ease-out-soft) both;
-  }
   .animate-caret {
     animation: caret 1s steps(1) infinite;
-  }
-  .text-balance {
-    text-wrap: balance;
-  }
-  .text-pretty {
-    text-wrap: pretty;
   }
 }
 
@@ -372,7 +346,6 @@
   .window-rim,
   .window-rise,
   .animate-rise,
-  .animate-ticker,
   .update-fill,
   .update-ring {
     animation: none !important;
