@@ -39,7 +39,7 @@ export function DownloadChip({ className }: { className?: string }) {
   return (
     <span
       className={cx(
-        "animate-fade inline-flex h-8 items-center gap-2 rounded-full border border-lamp/45 bg-[color-mix(in_oklab,var(--lamp)_14%,var(--bg))] pr-3.5 pl-1 text-[14px] whitespace-nowrap shadow-[0_0_24px_-8px_rgb(234_176_76/0.6)] backdrop-blur-md",
+        "animate-fade inline-flex h-8 items-center gap-2 rounded-full border border-lamp/45 bg-[color-mix(in_oklab,var(--lamp)_14%,var(--bg))] pr-3.5 pl-1 text-[14px] whitespace-nowrap shadow-[0_0_24px_-8px_rgb(234_176_76/0.6)]",
         className,
       )}
       title="Installer downloads across all releases, counted by GitHub"

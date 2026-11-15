@@ -6,13 +6,13 @@
 
 <p align="center">
   <b>Every document on your PC, one search away.</b><br>
-  A free, open-source Windows app that finds any PDF, Word, Excel or PowerPoint file<br>
+  A free, open-source app for Windows and Linux that finds any PDF, Word, Excel or PowerPoint file<br>
   by its name, its folder or the words inside it.
 </p>
 
 <p align="center">
   <a href="https://paperlight.vercel.app"><b>Website</b></a> ·
-  <a href="https://github.com/webKing021/paperlight/releases/latest"><b>Download for Windows</b></a> ·
+  <a href="https://github.com/webKing021/paperlight/releases/latest"><b>Download for Windows or Linux</b></a> ·
   <a href="https://github.com/webKing021/paperlight">Source code</a>
 </p>
 
@@ -21,7 +21,7 @@
   <a href="LICENSE"><img alt="MIT license" src="https://img.shields.io/badge/license-MIT-e09c26"></a>
 </p>
 
-<img src="docs/preview-dark.png" alt="The Paperlight website: the headline, the download button and the interactive demo of the app">
+<img src="docs/preview-dark.png" alt="The Paperlight website: the headline, the Windows and Linux download and the interactive demo of the app">
 
 ## What Paperlight does
 
@@ -46,7 +46,8 @@ Paperlight reads them once, keeps up as they change, and puts any of them a few 
 - **Updates itself, if you want.** New versions install from inside the app in a few seconds,
   keeping your index, favourites and tags.
 
-Free for Windows 10 and 11 (64-bit), no admin rights needed.
+Free for Windows 10 and 11 (64-bit), no admin rights needed, and for Linux (64-bit) as a beta
+with .deb, .rpm and AppImage packages.
 [Download the latest version](https://github.com/webKing021/paperlight/releases/latest).
 
 ## This repository
@@ -58,8 +59,7 @@ The app itself lives in [webKing021/paperlight](https://github.com/webKing021/pa
   typos, previews and quick search all work in the browser.
 - **Always up to date.** The version, the installer and the download count come straight
   from GitHub.
-- **Two moods.** A lamp shining onto the app in the dark theme, morning sun through a window
-  in the light theme.
+- **Two themes.** Dark and light, with warm light landing on the app window in both.
 - **Nothing to hide.** No tracking, no cookies, fonts served from the site itself.
 
 To run it on your computer:

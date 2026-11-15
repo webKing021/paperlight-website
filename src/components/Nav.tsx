@@ -85,11 +85,12 @@ export function Nav() {
         scrolled || open ? "border-border bg-bg/92 backdrop-blur-md" : "border-transparent",
       )}
     >
-      <div className="mx-auto flex h-16 max-w-[1200px] items-center gap-3 px-4 min-[380px]:px-5 sm:gap-6 sm:px-8">
+      {/* Tablets (md) get the full menu too, so everything sits a little closer there. */}
+      <div className="mx-auto flex h-16 max-w-[1200px] items-center gap-3 px-4 min-[380px]:px-5 sm:px-8 lg:gap-6">
         <Logo />
-        <nav className="ml-4 hidden items-center gap-1 md:flex">
+        <nav className="hidden items-center md:flex lg:ml-4 lg:gap-1">
           {LINKS.map((l) => (
-            <a key={l.href} href={l.href} onClick={goToSection} className="rounded-full px-3 py-1.5 text-[14px] text-muted transition-colors hover:text-fg">
+            <a key={l.href} href={l.href} onClick={goToSection} className="rounded-full px-2.5 py-1.5 text-[14px] text-muted transition-colors hover:text-fg lg:px-3">
               {l.label}
             </a>
           ))}
@@ -114,7 +115,7 @@ export function Nav() {
           <a
             href="/#download"
             onClick={goToSection}
-            className="hidden h-9 items-center gap-2 rounded-full bg-button px-4 text-[13.5px] font-semibold text-on-button transition-opacity hover:opacity-90 sm:flex"
+            className="hidden h-9 shrink-0 items-center gap-2 rounded-full bg-button px-4 text-[13.5px] font-semibold text-on-button transition-opacity hover:opacity-90 sm:flex"
           >
             <Download className="size-4" />
             Download
