@@ -1,10 +1,11 @@
 import { useEffect } from "react";
+import { DownloadSection } from "./components/Download";
 import { Features } from "./components/Features";
-import { Film } from "./components/Film";
 import { Hero } from "./components/Hero";
 import { Nav } from "./components/Nav";
 import { NotFound } from "./components/NotFound";
-import { Faq, FinalCta, Footer, Formats, Keyboard, OpenSource, Privacy, Screenshots, Steps } from "./components/Sections";
+import { Faq, FinalCta, Footer, OpenSource, Privacy } from "./components/Sections";
+import { Showcase } from "./components/Showcase";
 
 const HOME = new Set(["/", "/index", "/index.html"]);
 
@@ -50,13 +51,10 @@ export default function App() {
       <Nav />
       <main>
         <Hero />
-        <Film />
         <Features />
-        <Formats />
         <Privacy />
-        <Steps />
-        <Screenshots />
-        <Keyboard />
+        <Showcase />
+        <DownloadSection />
         <OpenSource />
         <Faq />
         <FinalCta />
