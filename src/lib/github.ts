@@ -20,9 +20,9 @@ export type LinuxPackage = { label: string; url: string; sizeMb: number | null }
 /** What the page shows before (or without) the GitHub API: the current release. */
 const FALLBACK: RepoInfo = {
   stars: null,
-  version: "1.2.2",
+  version: "1.2.3",
   downloadUrl: RELEASES_URL,
-  sizeMb: 5.2,
+  sizeMb: 5.3,
   releaseUrl: RELEASES_URL,
   // Without the API the exact file links aren't known: the release page lists all three.
   linux: [".deb", ".rpm", "AppImage"].map((label) => ({ label, url: RELEASES_URL, sizeMb: null })),
