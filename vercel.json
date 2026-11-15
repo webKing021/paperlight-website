@@ -7,22 +7,69 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "redirects": [
-    { "source": "/download", "destination": "https://github.com/webKing021/paperlight/releases/latest", "permanent": false },
-    { "source": "/github", "destination": "https://github.com/webKing021/paperlight", "permanent": false },
-    { "source": "/releases", "destination": "https://github.com/webKing021/paperlight/releases", "permanent": false }
+    {
+      "source": "/download",
+      "destination": "https://github.com/webKing021/paperlight/releases/latest",
+      "permanent": false
+    },
+    {
+      "source": "/github",
+      "destination": "https://github.com/webKing021/paperlight",
+      "permanent": false
+    },
+    {
+      "source": "/releases",
+      "destination": "https://github.com/webKing021/paperlight/releases",
+      "permanent": false
+    }
   ],
-  "rewrites": [{ "source": "/((?!api/).*)", "destination": "/index.html" }],
+  "rewrites": [
+    {
+      "source": "/((?!api/).*)",
+      "destination": "/index.html"
+    }
+  ],
   "headers": [
     {
       "source": "/assets/(.*)",
-      "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
     },
     {
       "source": "/(.*)",
       "headers": [
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
-        { "key": "X-Frame-Options", "value": "DENY" }
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://api.github.com; frame-src https://www.youtube-nocookie.com; frame-ancestors 'none'; base-uri 'self'; form-action 'none'; object-src 'none'; upgrade-insecure-requests"
+        },
+        {
+          "key": "Strict-Transport-Security",
+          "value": "max-age=63072000; includeSubDomains"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=(), payment=(), usb=(), browsing-topics=()"
+        },
+        {
+          "key": "Cross-Origin-Opener-Policy",
+          "value": "same-origin"
+        }
       ]
     }
   ]
