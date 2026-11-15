@@ -84,3 +84,17 @@ export function WindowsIcon({ className }: { className?: string }) {
     </svg>
   );
 }
+
+/** A plain penguin, for the Linux downloads. */
+export function LinuxIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 16 16" className={className} fill="currentColor" aria-hidden="true">
+      <path
+        fillRule="evenodd"
+        d="M8 .8c-1.9 0-3.1 1.5-3.1 3.5 0 1.2-.5 2-1.2 3.2-.8 1.3-1.3 2.6-1.3 3.9 0 .8.2 1.5.6 2h10c.4-.5.6-1.2.6-2 0-1.3-.5-2.6-1.3-3.900-.7-1.200-1.200-2-1.200-3.200C11.100 2.300 9.900.800 8 .800zm0 5.400c1.300 0 2.300 1.500 2.300 3.500 0 1.600-1 2.600-2.300 2.600s-2.300-1-2.300-2.600c0-2 1-3.500 2.300-3.500z"
+      />
+      <ellipse cx="4.9" cy="14.3" rx="2.1" ry="0.9" />
+      <ellipse cx="11.1" cy="14.3" rx="2.1" ry="0.9" />
+    </svg>
+  );
+}

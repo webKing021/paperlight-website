@@ -1,8 +1,7 @@
-import { ArrowRight, Menu, Moon, Star, Sun, X } from "lucide-react";
+import { ArrowRight, Download, Menu, Moon, Star, Sun, X } from "lucide-react";
 import { useEffect, useState, type MouseEvent } from "react";
 import { formatStars, REPO_URL, useRepoInfo } from "../lib/github";
 import { useTheme } from "../lib/theme";
-import { DownloadButton } from "./Hero";
 import { GitHubIcon, Mark } from "./icons";
 import { cx } from "./ui";
 
@@ -82,8 +81,8 @@ export function Nav() {
   return (
     <header
       className={cx(
-        "fixed inset-x-0 top-0 z-50 transition-[background-color,border-color,backdrop-filter] duration-300",
-        scrolled || open ? "border-b border-border bg-bg/80 backdrop-blur-xl" : "border-b border-transparent",
+        "fixed inset-x-0 top-0 z-50 border-b transition-[background-color,border-color] duration-300",
+        scrolled || open ? "border-border bg-bg/92 backdrop-blur-md" : "border-transparent",
       )}
     >
       <div className="mx-auto flex h-16 max-w-[1200px] items-center gap-3 px-4 min-[380px]:px-5 sm:gap-6 sm:px-8">
@@ -95,26 +94,30 @@ export function Nav() {
             </a>
           ))}
         </nav>
-        <div className="ml-auto flex items-center gap-1.5 sm:gap-2">
+        <div className="ml-auto flex items-center gap-1 sm:gap-2">
           <ThemeToggle />
           <a
             href={REPO_URL}
             target="_blank"
             rel="noreferrer"
             aria-label="Paperlight on GitHub"
-            className="flex h-9 items-center gap-2 rounded-full bg-button px-2.5 text-[13px] font-semibold tracking-wide text-on-button transition-opacity hover:opacity-90 min-[380px]:pr-3.5 min-[380px]:pl-3"
+            className="flex h-9 items-center gap-2 rounded-full px-2.5 text-[13.5px] font-medium text-fg-2 transition-colors hover:bg-card-2 hover:text-fg"
           >
-            <GitHubIcon className="size-4" />
-            <span className="hidden min-[380px]:inline">GitHub</span>
+            <GitHubIcon className="size-[18px]" />
             {!!stars && (
-              <>
-                <span className="hidden h-4 w-px bg-on-button/25 min-[380px]:block" />
-                <span className="hidden items-center gap-1 tabular-nums min-[380px]:flex">
-                  <Star className="size-3.5 fill-current" />
-                  {formatStars(stars)}
-                </span>
-              </>
+              <span className="hidden items-center gap-1 tabular-nums min-[380px]:flex">
+                <Star className="size-3.5 fill-lamp text-lamp" />
+                {formatStars(stars)}
+              </span>
             )}
+          </a>
+          <a
+            href="/#download"
+            onClick={goToSection}
+            className="hidden h-9 items-center gap-2 rounded-full bg-button px-4 text-[13.5px] font-semibold text-on-button transition-opacity hover:opacity-90 sm:flex"
+          >
+            <Download className="size-4" />
+            Download
           </a>
           <button
             type="button"
@@ -146,14 +149,19 @@ export function Nav() {
               <ArrowRight className="size-4 text-faint" />
             </a>
           ))}
-          <div className="mt-5">
-            <DownloadButton size="md" />
-          </div>
+          <a
+            href="/#download"
+            onClick={(e) => {
+              setOpen(false);
+              goToSection(e);
+            }}
+            className="mt-5 flex h-11 items-center justify-center gap-2 rounded-full bg-button text-[15px] font-semibold text-on-button"
+          >
+            <Download className="size-4" />
+            Download
+          </a>
         </nav>
       )}
-
-      {/* Reading progress (browsers that support scroll-driven animations). */}
-      <div aria-hidden="true" className="progress absolute inset-x-0 bottom-[-1px] h-px bg-gradient-to-r from-transparent via-lamp to-lamp" />
     </header>
   );
 }

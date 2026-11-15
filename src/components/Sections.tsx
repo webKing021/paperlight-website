@@ -1,57 +1,18 @@
 import { ArrowUpRight, Download, EyeOff, FileLock2, Plus, Scale, Star, UserX } from "lucide-react";
-import { useState, type ReactNode } from "react";
-import type { Kind } from "../demo/data";
+import type { ReactNode } from "react";
 import { AUTHOR_URL, formatStars, REPO_URL, useDownloads, useRepoInfo } from "../lib/github";
-import { downloadsLabel } from "./DownloadCount";
-import { DownloadButton } from "./Hero";
-import { FileIcon, GitHubIcon } from "./icons";
-import { Logo, ThemeToggle } from "./Nav";
 import { spotlight } from "../lib/reveal";
+import { DownloadButtons, DownloadMeta, PlatformSwitch } from "./Download";
+import { downloadsLabel } from "./DownloadCount";
+import { GitHubIcon } from "./icons";
+import { Logo, ThemeToggle } from "./Nav";
 import { Reveal, RevealLines } from "./Reveal";
-import { cx, Kbd, SectionHeading } from "./ui";
-
-/* ------------------------------------------------------------------ Formats */
-
-const READ: [string, Kind][] = [
-  ["pdf", "pdf"],
-  ["docx", "word"],
-  ["odt", "word"],
-  ["rtf", "word"],
-  ["xlsx", "excel"],
-  ["xlsm", "excel"],
-  ["xlsb", "excel"],
-  ["xls", "excel"],
-  ["ods", "excel"],
-  ["csv", "excel"],
-  ["pptx", "slides"],
-  ["odp", "slides"],
-];
-
-export function Formats() {
-  return (
-    <section className="mx-auto max-w-[1200px] px-5 pt-24 sm:px-8">
-      <Reveal className="card-depth flex flex-col gap-6 rounded-2xl border border-border bg-card p-6 sm:p-8 lg:flex-row lg:items-center lg:gap-10">
-        <div className="lg:w-72 lg:shrink-0">
-          <h3 className="text-[17px] font-semibold text-fg">Reads the text of 12 formats</h3>
-          <p className="mt-1 text-[15px] text-muted">Older doc, dot, ppt and pps files are found by name. Plain txt and md files can be switched on.</p>
-        </div>
-        <ul className="grid grid-cols-4 gap-x-3 gap-y-4 min-[420px]:grid-cols-6 xl:flex xl:flex-wrap xl:gap-x-5">
-          {READ.map(([ext, kind], i) => (
-            <Reveal as="li" key={ext} index={i * 0.4} className="flex flex-col items-center gap-1.5">
-              <FileIcon kind={kind} ext={ext} size={38} />
-              <span className="text-[12px] text-muted">.{ext}</span>
-            </Reveal>
-          ))}
-        </ul>
-      </Reveal>
-    </section>
-  );
-}
+import { btn, cx, SectionHeading } from "./ui";
 
 /* ------------------------------------------------------------------ Privacy */
 
 const NUMBERS = [
-  { value: "0", unit: "bytes", label: "of your data leave your PC. It works offline; it only goes online for optional updates." },
+  { value: "0", unit: "bytes", label: "of your data leave your PC. It only goes online for optional updates." },
   { value: "~6", unit: "MB", label: "of memory when the window is closed and it waits in the tray." },
   { value: "0", unit: "% CPU", label: "when idle. No polling: the disk tells Paperlight what changed." },
   { value: "~5", unit: "MB", label: "installer. Built with Rust and Tauri, not a bundled browser." },
@@ -65,28 +26,29 @@ const PROMISES = [
 
 export function Privacy() {
   return (
-    <section id="privacy" className="relative mt-36 overflow-hidden border-y border-border bg-bg-2">
+    <section id="privacy" className="relative mt-32 overflow-hidden border-y border-border bg-bg-2 sm:mt-40">
       <div aria-hidden="true" className="grid-bg absolute inset-0 opacity-60" />
       <div className="relative mx-auto max-w-[1200px] px-5 py-24 sm:px-8 sm:py-32">
         <SectionHeading
+          eyebrow="Privacy and footprint"
           title={["Private by design.", "Light by nature."]}
           lead="A search tool sees everything you keep, so Paperlight keeps it all on your PC and stays out of the way."
         />
-        <Reveal className="card-depth mt-14 grid grid-cols-1 gap-px overflow-hidden rounded-2xl border border-border bg-border sm:grid-cols-2 lg:grid-cols-4">
-          {NUMBERS.map((n) => (
-            <div key={n.label} className="bg-card p-6 sm:p-7">
+        <div className="mt-16 grid grid-cols-2 gap-x-6 gap-y-10 lg:grid-cols-4 lg:gap-x-0">
+          {NUMBERS.map((n, i) => (
+            <Reveal key={n.label} index={i} className="border-border lg:border-l lg:px-7 lg:first:border-l-0 lg:first:pl-0">
               <div className="flex items-baseline gap-1.5">
-                <span className="text-[48px] leading-none font-semibold tracking-[-0.04em] text-fg sm:text-[56px]">{n.value}</span>
-                <span className="text-lg font-medium text-lamp">{n.unit}</span>
+                <span className="text-[clamp(3.25rem,7vw,5.5rem)] leading-none font-semibold tracking-[-0.05em] text-fg">{n.value}</span>
+                <span className="text-lg font-medium text-accent">{n.unit}</span>
               </div>
-              <p className="mt-4 text-[15px] leading-relaxed text-muted">{n.label}</p>
-            </div>
+              <p className="mt-4 max-w-[17rem] text-[15px] leading-relaxed text-muted">{n.label}</p>
+            </Reveal>
           ))}
-        </Reveal>
-        <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-3">
+        </div>
+        <div className="mt-16 grid grid-cols-1 gap-x-10 gap-y-8 border-t border-border pt-10 md:grid-cols-3">
           {PROMISES.map(({ icon: Icon, title, body }, i) => (
-            <Reveal key={title} index={i} className="card-depth flex gap-4 rounded-2xl border border-border bg-card p-6 md:flex-col lg:flex-row">
-              <span className="flex size-10 shrink-0 items-center justify-center rounded-xl border border-border bg-bg-2 text-fg">
+            <Reveal key={title} index={i} className="flex gap-4">
+              <span className="flex size-10 shrink-0 items-center justify-center rounded-xl border border-border bg-card text-fg">
                 <Icon className="size-[18px]" />
               </span>
               <div>
@@ -101,174 +63,27 @@ export function Privacy() {
   );
 }
 
-/* ------------------------------------------------------------------ How it works */
-
-const STEPS = [
-  { title: "Install", body: "Run the installer. No admin rights and no account. Windows 10 or 11, 64-bit." },
-  { title: "Choose where to look", body: "Pick drives or folders and the formats you care about. Paperlight is usable while the first scan runs." },
-  {
-    title: "Search",
-    body: (
-      <>
-        <Kbd>Ctrl</Kbd> <Kbd>K</Kbd> in the app or <Kbd>Alt</Kbd> <Kbd>Space</Kbd> from anywhere. <Kbd>Enter</Kbd> opens.
-      </>
-    ),
-  },
-];
-
-export function Steps() {
-  return (
-    <section className="mx-auto max-w-[1200px] px-5 pt-36 sm:px-8">
-      <SectionHeading title={["Set up in a minute."]} lead="A short welcome walks you through it on first run. After that it just stays current." />
-      <ol className="mt-14 grid grid-cols-1 gap-4 md:grid-cols-3">
-        {STEPS.map((s, i) => (
-          <Reveal
-            as="li"
-            key={s.title}
-            index={i}
-            onPointerMove={spotlight}
-            className="spot card-depth rounded-2xl border border-border bg-card p-6 sm:p-7"
-          >
-            <span className="flex size-9 items-center justify-center rounded-full border border-border-2 text-[15px] font-semibold text-fg tabular-nums">
-              {i + 1}
-            </span>
-            <h3 className="mt-6 text-[18px] font-semibold text-fg">{s.title}</h3>
-            <p className="mt-2 text-[15px] leading-relaxed text-muted">{s.body}</p>
-          </Reveal>
-        ))}
-      </ol>
-    </section>
-  );
-}
-
-/* ------------------------------------------------------------------ Screenshots */
-
-const SHOTS = [
-  { id: "overview", label: "Overview", alt: "Overview: a tile per document type, the list below and a PDF preview" },
-  { id: "search", label: "Search", alt: "Search results with the matching passages highlighted" },
-  { id: "quick-search", label: "Quick search", alt: "The quick search launcher opened with Alt+Space" },
-  { id: "duplicates", label: "Duplicates", alt: "Identical copies grouped together" },
-  { id: "storage", label: "Storage", alt: "Size by type and the largest documents" },
-  { id: "settings", label: "Settings", alt: "Settings: choose which file formats are indexed" },
-  { id: "update", label: "Updates", alt: "A new version offered inside Paperlight, with what's new" },
-  { id: "dark", label: "Dark theme", alt: "Paperlight in its dark theme" },
-  { id: "welcome", label: "Welcome", alt: "The welcome screen on first run" },
-];
-
-export function Screenshots() {
-  const [active, setActive] = useState(SHOTS[0].id);
-  const shot = SHOTS.find((s) => s.id === active)!;
-  return (
-    <section id="screenshots" className="mx-auto max-w-[1200px] px-5 pt-36 sm:px-8">
-      <SectionHeading title={["The real thing."]} lead="Screenshots of Paperlight on Windows 11, with made-up sample documents." />
-      <Reveal className="-mx-5 mt-10 flex gap-1.5 overflow-x-auto px-5 pb-1 [scrollbar-width:none] sm:mx-0 sm:px-0" role="tablist" aria-label="Screenshots">
-        {SHOTS.map((s) => (
-          <button
-            key={s.id}
-            type="button"
-            role="tab"
-            aria-selected={s.id === active}
-            onClick={() => setActive(s.id)}
-            className={cx(
-              "shrink-0 rounded-full border px-4 py-1.5 text-[14px] transition-colors",
-              s.id === active ? "border-fg bg-fg text-bg" : "border-border text-muted hover:border-border-2 hover:text-fg",
-            )}
-          >
-            {s.label}
-          </button>
-        ))}
-      </Reveal>
-      <Reveal variant="scale" className="card-depth mt-5 overflow-hidden rounded-2xl border border-border bg-bg-2 p-2 sm:p-6">
-        <a
-          href={`/screenshots/${shot.id}.png`}
-          target="_blank"
-          rel="noreferrer"
-          title="Open full size"
-          className="flex cursor-zoom-in items-center justify-center"
-        >
-          <img
-            key={shot.id}
-            src={`/screenshots/${shot.id}.png`}
-            alt={shot.alt}
-            width={shot.id === "quick-search" ? 1024 : 1804}
-            height={shot.id === "quick-search" ? 694 : 1217}
-            loading="lazy"
-            decoding="async"
-            className={cx(
-              "animate-fade h-auto rounded-lg shadow-[0_20px_60px_-20px_rgb(0_0_0/0.5)]",
-              shot.id === "quick-search" ? "w-full max-w-[720px]" : "w-full",
-            )}
-          />
-        </a>
-      </Reveal>
-      {/* Warm the cache so switching tabs is instant. */}
-      <div className="hidden">
-        {SHOTS.filter((s) => s.id !== active).map((s) => (
-          <img key={s.id} src={`/screenshots/${s.id}.png`} alt="" loading="lazy" />
-        ))}
-      </div>
-    </section>
-  );
-}
-
-/* ------------------------------------------------------------------ Keyboard */
-
-const KEYS: [string[], string][] = [
-  [["Alt", "Space"], "Quick search"],
-  [["Ctrl", "K"], "Search"],
-  [["Enter"], "Open"],
-  [["Ctrl", "Enter"], "Show in folder"],
-  [["Ctrl", "C"], "Copy file"],
-  [["Ctrl", "Shift", "C"], "Copy path"],
-  [["Ctrl", "D"], "Favourite"],
-  [["Ctrl", "T"], "Tag"],
-  [["Ctrl", "I"], "Details panel"],
-  [["Ctrl", "B"], "Sidebar"],
-];
-
-export function Keyboard() {
-  return (
-    <section className="mx-auto max-w-[1200px] px-5 pt-36 sm:px-8">
-      <div className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] lg:items-center">
-        <SectionHeading title={["Hands stay on", "the keyboard."]} lead="Everything has a shortcut. Arrow keys move through results, Page Up and Down jump." />
-        <Reveal index={1} className="card-depth grid grid-cols-1 gap-px overflow-hidden rounded-2xl border border-border bg-border sm:grid-cols-2">
-          {KEYS.map(([keys, label]) => (
-            <div key={label} className="flex items-center justify-between gap-4 bg-card px-5 py-4">
-              <span className="text-[15px] text-fg-2">{label}</span>
-              <span className="flex gap-1 text-[15px]">
-                {keys.map((k) => (
-                  <Kbd key={k}>{k}</Kbd>
-                ))}
-              </span>
-            </div>
-          ))}
-        </Reveal>
-      </div>
-    </section>
-  );
-}
-
 /* ------------------------------------------------------------------ Open source */
 
 export function OpenSource() {
   const { stars } = useRepoInfo();
   const downloads = useDownloads();
   return (
-    <section className="mx-auto max-w-[1200px] px-5 pt-36 sm:px-8">
+    <section className="mx-auto max-w-[1200px] px-5 pt-32 sm:px-8 sm:pt-40">
       <Reveal
         variant="scale"
         onPointerMove={spotlight}
-        className="spot card-depth overflow-hidden rounded-3xl border border-border bg-card px-6 py-12 sm:px-14 sm:py-20"
+        className="spot card-depth overflow-hidden rounded-3xl border border-border bg-card px-6 py-12 sm:px-14 sm:py-16"
       >
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute -top-40 left-1/2 h-80 w-[700px] -translate-x-1/2 rounded-full bg-[radial-gradient(closest-side,rgb(234_176_76/0.18),transparent)]"
+          className="pointer-events-none absolute -top-40 left-1/2 h-80 w-[700px] -translate-x-1/2 rounded-full bg-[radial-gradient(closest-side,rgb(234_176_76/0.16),transparent)]"
         />
         <div className="relative grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:items-end">
           <div>
             <RevealLines
               lines={["Free and open source.", "Read every line."]}
-              className="text-[clamp(2rem,4.4vw,3.25rem)] leading-[1.05] font-semibold tracking-[-0.035em] text-fg"
+              className="text-[clamp(2.1rem,4.8vw,3.6rem)] leading-[1.04] font-semibold tracking-[-0.04em] text-fg"
             />
             <p className="mt-5 max-w-xl text-lg leading-relaxed text-muted">
               Paperlight is MIT licensed and built in the open with Tauri 2, Rust, SQLite FTS5 and React. Issues and pull requests are
@@ -276,21 +91,11 @@ export function OpenSource() {
             </p>
           </div>
           <div className="flex flex-col gap-3 sm:flex-row lg:flex-col lg:items-stretch">
-            <a
-              href={REPO_URL}
-              target="_blank"
-              rel="noreferrer"
-              className="flex h-12 items-center justify-center gap-2.5 rounded-full bg-button px-6 text-[15px] font-semibold text-on-button transition-opacity hover:opacity-90"
-            >
+            <a href={REPO_URL} target="_blank" rel="noreferrer" className={cx(btn.primary, "justify-center")}>
               <Star className="size-4" /> Star on GitHub
               {!!stars && <span className="rounded-full bg-on-button/10 px-2 py-0.5 text-[13px] tabular-nums">{formatStars(stars)}</span>}
             </a>
-            <a
-              href={`${REPO_URL}/blob/main/CONTRIBUTING.md`}
-              target="_blank"
-              rel="noreferrer"
-              className="flex h-12 items-center justify-center gap-2 rounded-full border border-border-2 px-6 text-[15px] font-medium text-fg-2 transition-colors hover:border-faint hover:text-fg"
-            >
+            <a href={`${REPO_URL}/blob/main/CONTRIBUTING.md`} target="_blank" rel="noreferrer" className={cx(btn.outline, "justify-center")}>
               Contribute <ArrowUpRight className="size-4" />
             </a>
           </div>
@@ -362,7 +167,7 @@ const FAQ: { q: string; a: ReactNode }[] = [
 
 /** The answer follows the latest release: Linux is only mentioned as available when it is. */
 function OtherSystems() {
-  const { linux, releaseUrl } = useRepoInfo();
+  const { linux } = useRepoInfo();
   if (!linux) {
     return (
       <>
@@ -373,21 +178,33 @@ function OtherSystems() {
   }
   return (
     <>
-      Linux: yes, as a beta. The{" "}
-      <a href={releaseUrl} target="_blank" rel="noreferrer" className="underline underline-offset-4 hover:text-fg">
-        latest release
-      </a>{" "}
-      has {linux.map((p) => p.label).join(", ")} packages. On Linux it doesn't update itself yet, and the quick-search shortcut
-      needs X11. There is no Mac version yet; it's built on Tauri, which runs on macOS too, so contributions are welcome.
+      Linux: yes, as a beta. There are {linux.map((p) => p.label).join(", ")} packages in the{" "}
+      <a href="#download" className="underline underline-offset-4 hover:text-fg">
+        download section
+      </a>
+      . On Linux it doesn't update itself yet, and the quick-search shortcut needs X11. There is no Mac version yet; it's built on
+      Tauri, which runs on macOS too, so contributions are welcome.
     </>
   );
 }
 
 export function Faq() {
   return (
-    <section id="faq" className="mx-auto max-w-[1200px] px-5 pt-36 sm:px-8">
+    <section id="faq" className="mx-auto max-w-[1200px] px-5 pt-32 sm:px-8 sm:pt-40">
       <div className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)]">
-        <SectionHeading title={["Questions."]} lead="Something else? Open an issue on GitHub." />
+        <SectionHeading
+          eyebrow="FAQ"
+          title={["Questions."]}
+          lead={
+            <>
+              Something else?{" "}
+              <a href={`${REPO_URL}/issues`} target="_blank" rel="noreferrer" className="underline decoration-border-2 underline-offset-4 hover:text-fg">
+                Open an issue on GitHub
+              </a>
+              .
+            </>
+          }
+        />
         <div className="divide-y divide-border border-y border-border">
           {FAQ.map((f, i) => (
             <Reveal as="details" key={f.q} index={i * 0.5} className="group py-1">
@@ -407,26 +224,29 @@ export function Faq() {
 /* ------------------------------------------------------------------ Final call + footer */
 
 export function FinalCta() {
-  const { version } = useRepoInfo();
   const downloads = useDownloads();
   return (
-    <section className="relative mt-40 overflow-hidden">
+    <section className="relative mt-32 overflow-hidden border-t border-border sm:mt-40">
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute bottom-0 left-1/2 h-[420px] w-[900px] -translate-x-1/2 translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgb(234_176_76/0.22),transparent)]"
+        className="pointer-events-none absolute bottom-0 left-1/2 h-[420px] w-[900px] max-w-[160vw] -translate-x-1/2 translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgb(234_176_76/0.2),transparent)]"
       />
-      <div className="relative mx-auto max-w-[1200px] px-5 pb-32 text-center sm:px-8">
+      <div className="relative mx-auto flex max-w-[1200px] flex-col items-center px-5 py-28 text-center sm:px-8 sm:py-36">
         <RevealLines
           lines={["Stop looking.", "Start finding."]}
           mutedFrom={2}
-          className="text-[clamp(2.75rem,7vw,5.5rem)] leading-[1] font-semibold tracking-[-0.045em] text-fg"
+          className="text-[clamp(2.75rem,7.5vw,6rem)] leading-[0.98] font-semibold tracking-[-0.05em] text-fg"
         />
-        <Reveal as="p" index={2} className="mx-auto mt-6 max-w-md text-lg text-muted">
-          Free for Windows 10 and 11. Version {version}
-          {downloads ? `, downloaded ${downloads.toLocaleString("en-US")} ${downloads === 1 ? "time" : "times"}` : ""}. Updates itself.
+        <Reveal as="p" index={2} className="mt-6 max-w-md text-lg text-muted">
+          Free for Windows and Linux
+          {downloads ? `, downloaded ${downloads.toLocaleString("en-US")} ${downloads === 1 ? "time" : "times"}` : ""}.
         </Reveal>
-        <Reveal index={3} className="mt-9 flex justify-center">
-          <DownloadButton />
+        <Reveal index={3} className="mt-9 flex flex-col items-center gap-4">
+          <PlatformSwitch />
+          <DownloadButtons className="justify-center" />
+          <p className="max-w-[34rem] text-[13.5px] leading-relaxed text-muted">
+            <DownloadMeta />
+          </p>
         </Reveal>
       </div>
     </section>

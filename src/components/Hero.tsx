@@ -1,10 +1,9 @@
-import { Code2, Download, Feather, ScanText, WifiOff } from "lucide-react";
+import { ArrowRight, Code2, Feather, ScanText, WifiOff } from "lucide-react";
 import { Demo } from "../demo/Demo";
-import { REPO_URL, useRepoInfo } from "../lib/github";
+import { useRepoInfo } from "../lib/github";
+import { DownloadButtons, DownloadMeta, PlatformSwitch } from "./Download";
 import { DownloadChip } from "./DownloadCount";
-import { WatchFilmLink } from "./Film";
-import { Daylight } from "./Lamp";
-import { GitHubIcon } from "./icons";
+import { WatchFilmLink } from "./Showcase";
 
 const FACTS = [
   { icon: ScanText, strong: "Searches inside", rest: "every document" },
@@ -13,46 +12,58 @@ const FACTS = [
   { icon: WifiOff, strong: "Works offline", rest: "no account" },
 ];
 
-export function DownloadButton({ size = "lg" }: { size?: "lg" | "md" }) {
-  const { downloadUrl } = useRepoInfo();
-  return (
-    <a
-      href={downloadUrl}
-      className={
-        size === "lg"
-          ? "group relative inline-flex h-13 items-center gap-2.5 rounded-full bg-button px-5 text-[13.5px] font-semibold tracking-[0.03em] whitespace-nowrap text-on-button uppercase min-[380px]:px-7 min-[380px]:text-[15px] min-[380px]:tracking-[0.04em] shadow-[0_0_0_1px_rgb(234_176_76/0.5),0_0_32px_-4px_rgb(234_176_76/0.55)] transition-[transform,box-shadow] duration-300 hover:-translate-y-px hover:shadow-[0_0_0_1px_rgb(234_176_76/0.8),0_0_44px_-2px_rgb(234_176_76/0.7)]"
-          : "inline-flex h-11 items-center gap-2 rounded-full bg-button px-5 text-[14px] font-semibold whitespace-nowrap text-on-button transition-opacity hover:opacity-90"
-      }
-    >
-      <Download className={size === "lg" ? "size-[18px]" : "size-4"} />
-      Download for Windows
-    </a>
-  );
-}
-
 export function Hero() {
-  const { version, sizeMb, releaseUrl, linux } = useRepoInfo();
+  const { version, releaseUrl } = useRepoInfo();
 
   return (
-    <section className="relative pt-32 sm:pt-40">
-      <Daylight />
-      <div className="relative z-10 mx-auto max-w-[1200px] px-5 sm:px-8">
-        <h1 className="animate-rise max-w-[15ch] text-[clamp(2.6rem,9vw,6.75rem)] leading-[0.95] font-semibold tracking-[-0.05em] text-fg">
+    <section className="relative pt-26 sm:pt-32">
+      <div aria-hidden="true" className="hero-sky" />
+      <div className="relative mx-auto flex max-w-[1200px] flex-col items-center px-5 text-center sm:px-8">
+        <div className="animate-rise flex flex-wrap items-center justify-center gap-2.5">
+          <a
+            href={releaseUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="group inline-flex h-8 items-center gap-2 rounded-full border border-border bg-card pr-3 pl-1 text-[13.5px] text-fg-2 transition-colors hover:border-border-2 hover:text-fg"
+          >
+            <span className="rounded-full bg-lamp px-2 py-0.5 text-[11.5px] font-semibold text-[#1b1b1e]">New</span>
+            Version {version} is out
+            <ArrowRight className="size-3.5 text-faint transition-transform duration-300 group-hover:translate-x-0.5" />
+          </a>
+          <DownloadChip />
+        </div>
+
+        <h1
+          className="animate-rise mt-7 text-[clamp(2.7rem,9.4vw,6.5rem)] leading-[0.96] font-semibold tracking-[-0.05em] text-fg"
+          style={{ animationDelay: "60ms" }}
+        >
           Every document.
           <br />
-          <span className="headline-accent">
-            One search away.
-          </span>
+          <span className="headline-accent">One search away.</span>
         </h1>
         <p
-          className="animate-rise mt-7 max-w-[34rem] text-pretty text-[clamp(1.05rem,1.6vw,1.3rem)] leading-relaxed text-muted"
-          style={{ animationDelay: "80ms" }}
+          className="animate-rise mt-7 max-w-[38rem] text-pretty text-[clamp(1.05rem,1.6vw,1.25rem)] leading-relaxed text-muted"
+          style={{ animationDelay: "120ms" }}
         >
           Paperlight finds any PDF, Word, Excel or PowerPoint file on your PC by its name, its folder or the words inside it.
           It indexes once, keeps up as files change, and never sends your data anywhere.
         </p>
 
-        <ul className="animate-rise mt-7 flex flex-wrap gap-x-6 gap-y-2.5 text-[15px]" style={{ animationDelay: "140ms" }}>
+        <div className="animate-rise mt-9 flex flex-col items-center gap-4" style={{ animationDelay: "180ms" }}>
+          <PlatformSwitch />
+          <div className="flex flex-wrap items-center justify-center gap-x-2.5 gap-y-3">
+            <DownloadButtons className="justify-center" />
+            <WatchFilmLink />
+          </div>
+          <p className="max-w-[34rem] text-[13.5px] leading-relaxed text-muted">
+            <DownloadMeta />
+          </p>
+        </div>
+
+        <ul
+          className="animate-rise mt-9 flex flex-wrap justify-center gap-x-7 gap-y-2.5 border-t border-border pt-6 text-[14.5px]"
+          style={{ animationDelay: "240ms" }}
+        >
           {FACTS.map(({ icon: Icon, strong, rest }) => (
             <li key={strong} className="flex items-center gap-2">
               <Icon className="size-4 text-lamp" strokeWidth={2} />
@@ -61,44 +72,9 @@ export function Hero() {
             </li>
           ))}
         </ul>
-
-        <div className="animate-rise mt-9 flex flex-wrap items-center gap-3" style={{ animationDelay: "200ms" }}>
-          <DownloadButton />
-          <a
-            href={REPO_URL}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex h-13 items-center gap-2 rounded-full border border-border-2 px-6 text-[15px] font-medium text-fg-2 transition-colors hover:border-faint hover:text-fg"
-          >
-            <GitHubIcon className="size-4" /> View source
-          </a>
-          <WatchFilmLink />
-        </div>
-        <p className="animate-rise mt-5 flex flex-wrap items-center gap-x-3 gap-y-2 text-[14px] text-muted" style={{ animationDelay: "240ms" }}>
-          <DownloadChip />
-          <span>
-          <a href={releaseUrl} target="_blank" rel="noreferrer" className="underline decoration-border-2 underline-offset-4 hover:text-fg hover:decoration-fg">
-            Version {version}
-          </a>{" "}
-          for Windows 10 and 11 (x64){sizeMb ? ` · ${sizeMb} MB` : ""} · no admin rights needed
-          </span>
-        </p>
-        {linux && (
-          <p className="animate-rise mt-2.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[14px] text-muted" style={{ animationDelay: "260ms" }}>
-            <span>Linux (beta):</span>
-            {linux.map((p, i) => (
-              <span key={p.label} className="flex items-center gap-x-2">
-                {i > 0 && <span aria-hidden="true">·</span>}
-                <a href={p.url} className="underline decoration-border-2 underline-offset-4 hover:text-fg hover:decoration-fg">
-                  {p.label}
-                </a>
-              </span>
-            ))}
-          </p>
-        )}
       </div>
 
-      <div className="relative mx-auto mt-20 max-w-[1240px] px-3 sm:mt-24 sm:px-8">
+      <div className="relative mx-auto mt-12 max-w-[1240px] px-3 sm:mt-14 sm:px-8">
         <Demo />
       </div>
     </section>

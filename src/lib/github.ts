@@ -15,20 +15,23 @@ export type RepoInfo = {
   linux: LinuxPackage[] | null;
 };
 
-export type LinuxPackage = { label: string; url: string };
+export type LinuxPackage = { label: string; url: string; sizeMb: number | null };
 
 /** What the page shows before (or without) the GitHub API: the current release. */
 const FALLBACK: RepoInfo = {
   stars: null,
-  version: "1.2.1",
+  version: "1.2.2",
   downloadUrl: RELEASES_URL,
   sizeMb: 5.2,
   releaseUrl: RELEASES_URL,
-  linux: null,
+  // Without the API the exact file links aren't known: the release page lists all three.
+  linux: [".deb", ".rpm", "AppImage"].map((label) => ({ label, url: RELEASES_URL, sizeMb: null })),
 };
 
-const CACHE_KEY = "paperlight-repo-v3";
+const CACHE_KEY = "paperlight-repo-v4";
 const CACHE_MS = 10 * 60 * 1000;
+
+const toMb = (bytes: number) => Math.round((bytes / 1024 / 1024) * 10) / 10;
 
 type Release = {
   tag_name: string;
@@ -51,14 +54,15 @@ async function load(): Promise<RepoInfo> {
     ] as const
   ).flatMap(([label, pattern]) => {
     const asset = rel?.assets.find((a) => pattern.test(a.name));
-    return asset ? [{ label, url: asset.browser_download_url }] : [];
+    return asset ? [{ label, url: asset.browser_download_url, sizeMb: toMb(asset.size) }] : [];
   });
   return {
-    linux: linux.length ? linux : null,
+    // No answer from GitHub: keep the fallback links. An answer without Linux files: offer none.
+    linux: rel ? (linux.length ? linux : null) : FALLBACK.linux,
     stars: typeof repo?.stargazers_count === "number" ? repo.stargazers_count : null,
     version: rel?.tag_name?.replace(/^v/, "") ?? FALLBACK.version,
     downloadUrl: setup?.browser_download_url ?? FALLBACK.downloadUrl,
-    sizeMb: setup ? Math.round((setup.size / 1024 / 1024) * 10) / 10 : FALLBACK.sizeMb,
+    sizeMb: setup ? toMb(setup.size) : FALLBACK.sizeMb,
     releaseUrl: rel?.html_url ?? FALLBACK.releaseUrl,
   };
 }

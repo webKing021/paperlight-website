@@ -5,8 +5,8 @@ import { search } from "../demo/search";
 import { formatSize } from "../lib/format";
 import { useRepoInfo } from "../lib/github";
 import { FileIcon, Mark } from "./icons";
-import { spotlight } from "../lib/reveal";
-import { Reveal } from "./Reveal";
+import { spotlight, useInView } from "../lib/reveal";
+import { Reveal, RevealLines } from "./Reveal";
 import { cx, Highlight, Kbd, SectionHeading } from "./ui";
 
 function Card({
@@ -46,8 +46,10 @@ function TypingSearch() {
   const [qi, setQi] = useState(0);
   const [len, setLen] = useState(0);
   const target = QUERIES[qi];
+  const [ref, inView] = useInView<HTMLDivElement>();
 
   useEffect(() => {
+    if (!inView) return;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduce) {
       setLen(target.length);
@@ -64,13 +66,13 @@ function TypingSearch() {
       done ? 2600 : 70 + Math.random() * 60,
     );
     return () => clearTimeout(t);
-  }, [len, target]);
+  }, [len, target, inView]);
 
   const q = target.slice(0, len);
   const hits = useMemo(() => (len >= 3 ? search(library, q).slice(0, 3) : []), [library, q, len]);
 
   return (
-    <div className="font-app mx-auto max-w-[560px] rounded-xl border border-line bg-paper shadow-[0_20px_50px_-24px_rgb(0_0_0/0.5)]">
+    <div ref={ref} className="font-app mx-auto max-w-[560px] rounded-xl border border-line bg-paper text-left shadow-[0_20px_50px_-24px_rgb(0_0_0/0.5)]">
       <div className="flex h-11 items-center gap-2.5 border-b border-line px-3.5">
         <Search className="size-4 text-graphite" />
         <span className="text-[14px] text-ink">
@@ -114,14 +116,15 @@ const EVENTS = [
 
 function LiveFeed() {
   const [n, setN] = useState(3);
+  const [ref, inView] = useInView<HTMLDivElement>();
   useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (!inView || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const t = setInterval(() => setN((x) => x + 1), 2400);
     return () => clearInterval(t);
-  }, []);
+  }, [inView]);
   const items = [0, 1, 2].map((i) => ({ ...EVENTS[(n - i) % EVENTS.length], key: n - i }));
   return (
-    <div className="font-app space-y-2">
+    <div ref={ref} className="font-app mx-auto max-w-[460px] space-y-2.5">
       {items.map((e, i) => (
         <div
           key={e.key}
@@ -165,12 +168,22 @@ function Buckets() {
 function QuickKeys() {
   return (
     <div className="flex h-full flex-col items-center justify-center gap-5">
-      <div className="flex items-center gap-2.5">
-        <Kbd className="h-12 min-w-16 rounded-xl text-[17px]">Alt</Kbd>
-        <span className="text-xl text-faint">+</span>
-        <Kbd className="h-12 min-w-36 rounded-xl text-[17px]">Space</Kbd>
+      <div className="flex items-center gap-3">
+        {["Alt", "Space"].map((k, i) => (
+          <span key={k} className="contents">
+            {i > 0 && <span className="text-2xl text-faint">+</span>}
+            <kbd
+              className={cx(
+                "flex h-16 items-center justify-center rounded-2xl border border-b-4 border-border-2 bg-card text-[19px] font-medium text-fg",
+                i === 0 ? "w-24" : "w-48",
+              )}
+            >
+              {k}
+            </kbd>
+          </span>
+        ))}
       </div>
-      <div className="font-app flex w-full max-w-[280px] items-center gap-2.5 rounded-xl border border-line bg-paper px-3.5 py-2.5 shadow-[0_16px_40px_-20px_rgb(0_0_0/0.5)]">
+      <div className="font-app flex w-full max-w-[340px] items-center gap-2.5 rounded-xl border border-line bg-paper px-3.5 py-2.5 shadow-[0_16px_40px_-20px_rgb(0_0_0/0.5)]">
         <Search className="size-4 text-graphite" />
         <span className="flex-1 text-[13.5px] text-pencil">Find any document…</span>
         <Mark className="size-4" stem="var(--ink)" bowl="var(--app-lamp)" />
@@ -277,8 +290,9 @@ function Updates() {
   const { version } = useRepoInfo();
   const [major, minor] = version.split(".").map(Number);
   const next = Number.isFinite(minor) ? `${major}.${minor + 1}.0` : "next";
+  const [ref, inView] = useInView<HTMLDivElement>();
   return (
-    <div className="font-app flex h-full flex-col items-center justify-center gap-4 sm:flex-row sm:gap-6">
+    <div ref={ref} className={cx("font-app flex h-full flex-col items-center justify-center gap-4 sm:flex-row sm:gap-6", !inView && "resting")}>
       <div className="w-full max-w-[250px] rounded-xl border border-line bg-paper-2 p-2">
         <div className="flex items-center gap-2.5 rounded-lg border border-app-lamp/40 bg-lamp-wash/45 py-2 pr-2.5 pl-1.5">
           <Ring size={28}>
@@ -364,39 +378,186 @@ function Choose() {
   );
 }
 
+/* ------------------------------------------------------------------ The three stories */
+
+const KEYS: [string[], string][] = [
+  [["Alt", "Space"], "Quick search"],
+  [["Ctrl", "K"], "Search"],
+  [["Enter"], "Open"],
+  [["Ctrl", "Enter"], "Show in folder"],
+  [["Ctrl", "C"], "Copy file"],
+  [["Ctrl", "Shift", "C"], "Copy path"],
+  [["Ctrl", "D"], "Favourite"],
+  [["Ctrl", "T"], "Tag"],
+];
+
+function Shortcuts() {
+  return (
+    <Reveal index={3} className="mt-7 grid grid-cols-1 gap-x-8 border-t border-border pt-5 min-[440px]:grid-cols-2">
+      {KEYS.map(([keys, label]) => (
+        <div key={label} className="flex items-center justify-between gap-3 py-1.5">
+          <span className="text-[14.5px] text-fg-2">{label}</span>
+          <span className="flex gap-1 text-[14px]">
+            {keys.map((k) => (
+              <Kbd key={k}>{k}</Kbd>
+            ))}
+          </span>
+        </div>
+      ))}
+    </Reveal>
+  );
+}
+
+/** One big feature: the live visual on one side, what it means on the other. */
+function Story({
+  n,
+  title,
+  body,
+  points,
+  flip,
+  extra,
+  children,
+}: {
+  n: string;
+  title: string;
+  body: ReactNode;
+  points?: string[];
+  flip?: boolean;
+  extra?: ReactNode;
+  children: ReactNode;
+}) {
+  return (
+    <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-2 lg:gap-16">
+      <Reveal
+        variant="scale"
+        className={cx(
+          // On a phone the words come first, then the picture; side by side from lg up.
+          "card-depth relative order-2 flex min-h-[280px] items-center overflow-hidden rounded-3xl border border-border bg-bg-2 p-5 sm:min-h-[380px] sm:p-10",
+          flip ? "lg:order-2" : "lg:order-none",
+        )}
+      >
+        <div aria-hidden="true" className="grid-bg absolute inset-0 opacity-50" />
+        <div className="relative w-full">{children}</div>
+      </Reveal>
+      <div>
+        <Reveal as="span" className="block text-[13px] font-semibold tracking-[0.14em] text-accent tabular-nums">
+          {n}
+        </Reveal>
+        <RevealLines
+          as="h3"
+          lines={[title]}
+          className="mt-3 text-[clamp(1.75rem,3.3vw,2.6rem)] leading-[1.08] font-semibold tracking-[-0.035em] text-fg"
+        />
+        <Reveal as="p" index={1} className="mt-4 text-[17px] leading-relaxed text-pretty text-muted">
+          {body}
+        </Reveal>
+        {points && (
+          <Reveal as="ul" index={2} className="mt-6 space-y-2.5">
+            {points.map((p) => (
+              <li key={p} className="flex gap-2.5 text-[15.5px] leading-relaxed text-fg-2">
+                <Check className="mt-1 size-4 shrink-0 text-lamp" strokeWidth={2.4} />
+                <span>{p}</span>
+              </li>
+            ))}
+          </Reveal>
+        )}
+        {extra}
+      </div>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ Formats */
+
+const READ: [string, Kind][] = [
+  ["pdf", "pdf"],
+  ["docx", "word"],
+  ["odt", "word"],
+  ["rtf", "word"],
+  ["xlsx", "excel"],
+  ["xlsm", "excel"],
+  ["xlsb", "excel"],
+  ["xls", "excel"],
+  ["ods", "excel"],
+  ["csv", "excel"],
+  ["pptx", "slides"],
+  ["odp", "slides"],
+];
+
+function FormatGrid() {
+  return (
+    <ul className="grid h-full grid-cols-4 content-center gap-x-2 gap-y-4">
+      {READ.map(([ext, kind]) => (
+        <li key={ext} className="flex flex-col items-center gap-1.5">
+          <FileIcon kind={kind} ext={ext} size={34} />
+          <span className="text-[12px] text-muted">.{ext}</span>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 export function Features() {
   return (
-    <section id="features" className="relative mx-auto max-w-[1200px] px-5 pt-36 sm:px-8">
+    <section id="features" className="relative mx-auto max-w-[1200px] px-5 pt-32 sm:px-8 sm:pt-40">
       <SectionHeading
+        eyebrow="What it does"
         title={["You remember what it said.", "Paperlight knows where it is."]}
         lead="Documents pile up in Downloads, on the Desktop, in project folders and old drives. Paperlight reads them once and keeps up, so any of them is a few keystrokes away."
       />
 
-      <div className="mt-14 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-6">
-        <Card
-          index={0}
-          className="md:col-span-2 lg:col-span-4"
-          title="Search inside documents"
-          body="Names, folders and the text of PDFs, Word, Excel and PowerPoint files: whole documents, not just the first pages. Prefixes work, typos are forgiven, and the matching passage is highlighted."
+      <div className="mt-20 space-y-20 sm:space-y-28">
+        <Story
+          n="01"
+          title="Search inside every document."
+          body="Names, folders and the text of PDFs, Word, Excel and PowerPoint files: whole documents, not just the first pages."
+          points={[
+            "Long reports are searched to the end, up to 200,000 characters each.",
+            "Typos are forgiven and the first few letters are enough.",
+            "The matching passage is highlighted, so you know it's the right file.",
+          ]}
         >
           <TypingSearch />
-        </Card>
-        <Card
-          index={1}
-          className="lg:col-span-2"
-          title="Quick search from any app"
-          body="Press Alt+Space wherever you are (or a shortcut you choose), type a few letters, press Enter. The document opens."
+        </Story>
+        <Story
+          n="02"
+          flip
+          title="Quick search from any app."
+          body="Press Alt+Space wherever you are (or a shortcut you choose), type a few letters, press Enter. The document opens, and your hands never leave the keyboard."
+          extra={<Shortcuts />}
         >
           <QuickKeys />
-        </Card>
-        <Card index={0} className="lg:col-span-2" title="Always current" body="New, renamed, moved and deleted files show up within a second, with no rescans.">
+        </Story>
+        <Story
+          n="03"
+          title="Always current, never busy."
+          body="New, renamed, moved and deleted files show up within a second. The disk tells Paperlight what changed, so nothing is ever rescanned."
+          points={[
+            "The first scan runs at background priority, and you can search while it runs.",
+            "No CPU use when idle, and about 6 MB of memory in the tray.",
+          ]}
+        >
           <LiveFeed />
-        </Card>
-        <Card index={1} className="lg:col-span-2" title="A tile for every type" body="PDFs, Word documents, spreadsheets and presentations, each with its own search.">
+        </Story>
+      </div>
+
+      <Reveal as="h3" className="mt-24 text-[clamp(1.5rem,2.6vw,2rem)] font-semibold tracking-[-0.03em] text-fg sm:mt-32">
+        And everything around it.
+      </Reveal>
+      <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-6">
+        <Card index={0} className="lg:col-span-2" title="A tile for every type" body="PDFs, Word documents, spreadsheets and presentations, each with its own search.">
           <Buckets />
         </Card>
-        <Card index={2} className="lg:col-span-2" title="Duplicates and storage" body="Find byte-identical copies and see what takes space. Nothing is ever deleted for you.">
+        <Card index={1} className="lg:col-span-2" title="Duplicates and storage" body="Find byte-identical copies and see what takes space. Nothing is ever deleted for you.">
           <Dupes />
+        </Card>
+        <Card
+          index={2}
+          className="md:col-span-2 lg:col-span-2"
+          title="Drag it where you need it"
+          body="Found it? Drag the result straight into an email, a chat or a folder. The original stays where it is."
+        >
+          <DragOut />
         </Card>
         <Card
           index={0}
@@ -416,19 +577,19 @@ export function Features() {
         </Card>
         <Card
           index={0}
-          className="md:col-span-2 lg:col-span-2"
-          title="Drag it where you need it"
-          body="Found it? Drag the result straight into an email, a chat or a folder. The original stays where it is."
-        >
-          <DragOut />
-        </Card>
-        <Card
-          index={1}
           className="md:col-span-2 lg:col-span-4"
           title="Updates itself"
           body="Download it once; it works offline from then on. When a new version brings new features, Paperlight shows what's new and, if you want it, installs it in a few seconds, signed and verified, keeping your index, favourites and tags."
         >
           <Updates />
+        </Card>
+        <Card
+          index={1}
+          className="md:col-span-2 lg:col-span-2"
+          title="Reads the text of 12 formats"
+          body="Older doc, dot, ppt and pps files are found by name. Plain txt and md files can be switched on."
+        >
+          <FormatGrid />
         </Card>
       </div>
     </section>

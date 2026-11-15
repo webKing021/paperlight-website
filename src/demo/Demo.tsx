@@ -1,6 +1,5 @@
 import { Maximize2, Minimize2, RotateCcw } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { Beam, Landing } from "../components/Lamp";
 import { cx } from "../components/ui";
 import { AppWindow, type AppWindowHandle } from "./AppWindow";
 
@@ -55,10 +54,7 @@ export function Demo() {
     <div>
       <div className="relative z-10 mb-3 flex flex-wrap items-center gap-x-4 gap-y-2 px-1">
         <div className="flex items-center gap-2 text-sm">
-          <span className="relative flex size-2">
-            <span className="absolute inset-0 animate-ping rounded-full bg-lamp opacity-50" />
-            <span className="relative size-2 rounded-full bg-lamp" />
-          </span>
+          <span className="size-2 rounded-full bg-lamp" />
           <span className="font-medium text-fg">Interactive demo</span>
           <span className="text-faint">· sample documents</span>
         </div>
@@ -95,10 +91,10 @@ export function Demo() {
       </div>
 
       <div className="relative">
-        {/* The lamp: a beam falling from the top of the page and landing on the window. */}
-        <Beam />
+        {/* Light pooling on the top edge of the window: behind it, never over any text. */}
+        <div aria-hidden="true" className="window-pool" />
         <div className="window-rise relative">
-          <Landing />
+          <div aria-hidden="true" className="window-rim" />
           <div
             ref={frame}
             className={cx(

@@ -1,4 +1,4 @@
-import { useEffect, useRef, type PointerEvent } from "react";
+import { useEffect, useRef, useState, type PointerEvent } from "react";
 
 /*
  * Scroll reveals. The head script adds `reveal` to <html> before the first paint, only when
@@ -48,4 +48,21 @@ export function spotlight(e: PointerEvent<HTMLElement>) {
   const r = el.getBoundingClientRect();
   el.style.setProperty("--mx", `${e.clientX - r.left}px`);
   el.style.setProperty("--my", `${e.clientY - r.top}px`);
+}
+
+/** Whether the element is on screen, so demos that animate by themselves can rest when it isn't. */
+export function useInView<T extends HTMLElement>() {
+  const ref = useRef<T>(null);
+  const [inView, setInView] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || typeof IntersectionObserver === "undefined") {
+      setInView(true);
+      return;
+    }
+    const io = new IntersectionObserver(([e]) => setInView(e.isIntersecting));
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+  return [ref, inView] as const;
 }
