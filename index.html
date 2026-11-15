@@ -28,20 +28,7 @@
     <meta name="twitter:image" content="__SITE_URL__/og.png" />
 
     <!-- Dark is the default; a saved (or ?theme=light) choice is applied before the first paint. -->
-    <script>
-      try {
-        var asked = new URLSearchParams(location.search).get("theme");
-        if (asked === "light" || asked === "dark") localStorage.setItem("paperlight-theme", asked);
-        if (localStorage.getItem("paperlight-theme") === "light") {
-          document.documentElement.classList.remove("dark");
-          document.querySelector('meta[name="theme-color"]').content = "#ffffff";
-        }
-      } catch (e) {}
-      // Scroll reveals: only hide content when it can be revealed again (see src/lib/reveal.ts).
-      if ("IntersectionObserver" in window && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
-        document.documentElement.classList.add("reveal");
-      }
-    </script>
+    <script src="/theme.js"></script>
   </head>
   <body>
     <div id="root"></div>
