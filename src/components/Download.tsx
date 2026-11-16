@@ -1,5 +1,5 @@
-import { ArrowDownToLine, Check, Download as DownloadIcon } from "lucide-react";
-import type { ReactNode } from "react";
+import { ArrowDownToLine, Check, Copy, Download as DownloadIcon } from "lucide-react";
+import { useRef, useState, type ReactNode } from "react";
 import { RELEASES_URL, useRepoInfo, type LinuxPackage } from "../lib/github";
 import { setPlatform, usePlatform, type Platform } from "../lib/platform";
 import { LinuxIcon, WindowsIcon } from "./icons";
@@ -184,7 +184,53 @@ function PackageRow({ pkg, first }: { pkg: LinuxPackage; first: boolean }) {
   );
 }
 
-const STEPS: { title: string; body: ReactNode }[] = [
+const WINGET = "winget install webKing021.Paperlight";
+
+/** The same install from a terminal, through Windows' own package manager. */
+function WingetCommand() {
+  const [copied, setCopied] = useState(false);
+  const code = useRef<HTMLElement>(null);
+
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(WINGET);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // No clipboard access: select the command so Ctrl+C takes it.
+      if (!code.current) return;
+      const range = document.createRange();
+      range.selectNodeContents(code.current);
+      const selection = window.getSelection();
+      selection?.removeAllRanges();
+      selection?.addRange(range);
+    }
+  };
+
+  return (
+    <div className="mt-3">
+      <p className="text-[13px] text-muted">Or from a terminal, with winget:</p>
+      <div className="mt-1.5 flex items-center gap-2 rounded-2xl border border-border-2 bg-bg-2 py-1.5 pr-1.5 pl-4">
+        <code ref={code} className="min-w-0 flex-1 py-1 font-mono text-[12.5px] leading-snug font-normal break-words text-fg sm:text-[13px]">
+          {WINGET}
+        </code>
+        <button
+          type="button"
+          onClick={copy}
+          aria-label={copied ? "Copied" : "Copy the winget command"}
+          className="flex h-8 shrink-0 items-center gap-1.5 rounded-xl px-2.5 text-[13px] font-medium text-fg-2 transition-colors hover:bg-card hover:text-fg"
+        >
+          {copied ? <Check className="size-4 text-lamp" strokeWidth={2.4} /> : <Copy className="size-4" />}
+          <span aria-live="polite" className="max-sm:sr-only">
+            {copied ? "Copied" : "Copy"}
+          </span>
+        </button>
+      </div>
+    </div>
+  );
+}
+
+const STEPS:{ title: string; body: ReactNode }[] = [
   { title: "Install", body: "Run the installer. No admin rights and no account." },
   { title: "Choose where to look", body: "Pick drives or folders and the formats you care about. You can search while the first scan runs." },
   {
@@ -227,7 +273,8 @@ export function DownloadSection() {
             <DownloadIcon className="size-[18px]" />
             Download for Windows
           </a>
-          <p className="mt-4 text-[13px] leading-relaxed text-muted">
+          <WingetCommand />
+          <p className="mt-4text-[13px] leading-relaxed text-muted">
             The installer isn't code-signed yet, so SmartScreen may warn: choose <em>More info</em>, then <em>Run anyway</em>.
           </p>
         </SystemCard>
