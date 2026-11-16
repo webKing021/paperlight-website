@@ -48,7 +48,8 @@ Paperlight reads them once, keeps up as they change, and puts any of them a few 
 
 Free for Windows 10 and 11 (64-bit), no admin rights needed, and for Linux (64-bit) as a beta
 with .deb, .rpm and AppImage packages.
-[Download the latest version](https://github.com/webKing021/paperlight/releases/latest).
+[Download the latest version](https://github.com/webKing021/paperlight/releases/latest),
+or on Windows run `winget install webKing021.Paperlight`.
 
 ## This repository
 
