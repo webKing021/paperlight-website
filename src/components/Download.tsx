@@ -274,7 +274,7 @@ export function DownloadSection() {
             Download for Windows
           </a>
           <WingetCommand />
-          <p className="mt-4text-[13px] leading-relaxed text-muted">
+          <p className="mt-4 text-[13px] leading-relaxed text-muted">
             The installer isn't code-signed yet, so SmartScreen may warn: choose <em>More info</em>, then <em>Run anyway</em>.
           </p>
         </SystemCard>
@@ -317,6 +317,14 @@ export function DownloadSection() {
           </Reveal>
         ))}
       </ol>
+
+      <p className="mx-auto mt-6 max-w-[640px] text-center text-[13px] leading-relaxed text-muted">
+        Official downloads are only on this page, on{" "}
+        <a href={RELEASES_URL} target="_blank" rel="noreferrer" className="underline underline-offset-4 hover:text-fg">
+          GitHub Releases
+        </a>{" "}
+        and through winget. A Paperlight download offered anywhere else is not from this project.
+      </p>
     </section>
   );
 }
